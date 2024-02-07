@@ -1,7 +1,13 @@
 {
   "name": "@control.ts/min",
-  "description": "A minimal version of the control.ts library. Contains only base component and tags.",
+  "description": "A minimal version of the control.ts library. Contains base components for easy creating HTML elements with functions.",
   "version": "0.0.0",
+  "author": "Yauheni Tsurankou <ikk.pott@gmail.com> (https://github.com/TELEUZI/TELEUZI)",
+  "repository": {
+    "directory": "packages/min",
+    "type": "git",
+    "url": "https://github.com/TELEUZI/control.ts.git"
+  },
   "private": true,
   "scripts": {
     "dev": "tsc --noEmit --watch",
@@ -12,13 +18,11 @@
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.1",
     "@control.ts/eslint-config": "workspace:*",
     "@control.ts/typescript-config": "workspace:*",
     "@types/eslint": "^8.56.1",
     "eslint": "^8.56.0",
     "typescript": "^5.3.3",
-    "tsx": "^4.7.0",
     "vite": "^4.1.2"
   },
   "exports": {
