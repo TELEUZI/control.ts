@@ -8,7 +8,6 @@
     "type": "git",
     "url": "https://github.com/TELEUZI/control.ts.git"
   },
-  "private": true,
   "scripts": {
     "dev": "tsc --noEmit --watch",
     "build": "vite build && tsc --project tsconfig.build.json --declaration --emitDeclarationOnly --outDir dist",
