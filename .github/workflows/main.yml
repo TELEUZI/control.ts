@@ -44,7 +44,7 @@ jobs: # list of things to do
         run: pnpm i
 
       - name: Code Linting
-        run: turbo lint
+        run: pnpm run lint
 
       - name: Build
-        run: turbo build
+        run: pnpm run build
