@@ -1,7 +1,7 @@
 {
   "name": "@control.ts/min",
   "description": "A minimal version of the control.ts library. Contains base components for easy creating HTML elements with functions.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Yauheni Tsurankou <ikk.pott@gmail.com> (https://github.com/TELEUZI/TELEUZI)",
   "repository": {
     "directory": "packages/min",
@@ -29,12 +29,12 @@
     "./src": "./src/index.ts",
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/min.js",
-      "import": "./dist/min.mjs"
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
     }
   },
-  "main": "./dist/min.js",
-  "module": "./dist/min.mjs",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "license": "MIT",
   "files": [
