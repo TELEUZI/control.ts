@@ -1,5 +1,11 @@
 # @control.ts/min
 
+## 0.1.2
+
+### Patch Changes
+
+- change internal package structure to improve bundle size, add generated tags
+
 ## 0.1.1
 
 ### Patch Changes

@@ -1,2 +1,3 @@
 export * from './base-component';
-export * from './tags';
+export * from './component-tags';
+export * from './element-tags';

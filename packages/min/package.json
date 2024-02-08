@@ -14,7 +14,8 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix ./src",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "update-html-tags": "pnpm run --filter=@control.ts/tags-scraper start && pnpm run lint:fix"
   },
   "devDependencies": {
     "@control.ts/eslint-config": "workspace:*",
