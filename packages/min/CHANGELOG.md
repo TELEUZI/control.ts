@@ -1,5 +1,11 @@
 # @control.ts/min
 
+## 0.1.5
+
+### Patch Changes
+
+- ca2fa90: Remove useless check
+
 ## 0.1.4
 
 ### Patch Changes
