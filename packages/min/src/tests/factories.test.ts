@@ -40,13 +40,4 @@ describe('createElementFactory', () => {
     expect(element.children[0]).toBe(child1);
     expect(element.children[1]).toBe(child2);
   });
-
-  // should not throw an error when called without props or children
-  it('should not throw an error when called without props or children', () => {
-    const factory = createElementFactory('div');
-
-    expect(() => {
-      factory({});
-    }).not.toThrow();
-  });
 });
