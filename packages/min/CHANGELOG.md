@@ -4,6 +4,7 @@
 
 ### Patch Changes
 
+- 3bae6ef: Expose mount function, add basic README
 - dd0695d: Add tests, improve API for module
 
 ## 0.1.3
