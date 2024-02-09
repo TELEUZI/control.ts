@@ -1,5 +1,11 @@
 # @control.ts/min
 
+## 0.1.3
+
+### Patch Changes
+
+- fix module exports
+
 ## 0.1.2
 
 ### Patch Changes
