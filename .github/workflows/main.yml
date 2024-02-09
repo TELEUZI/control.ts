@@ -5,7 +5,7 @@ on: # event list
       - '*'
 
 env: # environment variables (available in any part of the action)
-  NODE_VERSION: 18
+  NODE_VERSION: 20
 
 jobs: # list of things to do
   ci:
