@@ -5,13 +5,12 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "lint:fix": "eslint . --fix",
+    "lint:fix": "eslint . --fix --ext=ts",
     "prepare": "husky install",
     "format": "prettier --write --ignore-unknown .",
     "add-changeset": "changeset add",
     "version-packages": "changeset version",
-    "release": "changeset publish",
-    "prerelease": "pnpm run build"
+    "release": "pnpm run build && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",

@@ -7,62 +7,31 @@ export type Props<T extends HTMLElement = HTMLElement> = Partial<
   tag?: keyof HTMLElementTagNameMap;
 };
 
-export type ElementFnProps<T extends HTMLElement = HTMLElement> = Omit<Props<T>, 'tag'>;
-
-type TagName = keyof HTMLElementTagNameMap;
-
-type PossibleChild = HTMLElement | BaseComponent | null;
-
-export function createElement<T extends TagName>(tag: T, props: ElementFnProps, ...children: HTMLElement[]) {
-  const node = document.createElement(tag);
-  Object.assign(node, props);
-  children.forEach((child) => node.append(child));
-  return node;
-}
-
-export function createElementFactory<T extends TagName>(tag: T) {
-  return (props: ElementFnProps, ...children: HTMLElement[]) => createElement(tag, props, ...children);
-}
-
-export function createElementFactoryWithCustomProps<T extends TagName, P extends Partial<ElementFnProps>>(
-  tag: T,
-  props: P,
-) {
-  return (customProps: Partial<P>, ...children: HTMLElement[]) =>
-    createElement<T>(tag, { ...props, ...customProps }, ...children);
-}
-
-export function createElement$<T extends TagName>(
-  props: Props<HTMLElementTagNameMap[T]> & { tag: T },
-  children?: PossibleChild[],
-) {
-  return new BaseComponent<HTMLElementTagNameMap[T]>(props, ...(children ?? []));
-}
-
-export function createElementFactory$<T extends TagName>(tag: T) {
-  return (props: Props<HTMLElementTagNameMap[T]>, ...children: PossibleChild[]) =>
-    createElement$({ tag, ...props }, children);
-}
+export type PossibleChild = HTMLElement | BaseComponent | null;
 
 export class BaseComponent<T extends HTMLElement = HTMLElement> {
-  protected node: T;
+  protected _node: T;
 
-  protected children: BaseComponent[] = [];
+  public children: BaseComponent[] = [];
 
   constructor(p: Props<T>, ...children: PossibleChild[]) {
     p.txt && (p.textContent = p.txt);
     const node = document.createElement(p.tag ?? 'div') as T;
     Object.assign(node, p);
-    this.node = node;
+    this._node = node;
     if (children) {
       this.appendChildren(children.filter(isNotNullable));
     }
   }
 
+  public get node(): Readonly<T> {
+    return this._node;
+  }
+
   public append(child: NonNullable<PossibleChild>): void {
     if (child instanceof BaseComponent) {
       this.children.push(child);
-      this.node.append(child.getNode());
+      this.node.append(child.node);
     } else {
       this.node.append(child);
     }
@@ -75,11 +44,7 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
   }
 
   public setTextContent(text: string): void {
-    this.node.textContent = text;
-  }
-
-  public getNode() {
-    return this.node;
+    this._node.textContent = text;
   }
 
   public addClass(className: string): void {
@@ -107,18 +72,10 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
   }
 
   public toString(): string {
-    let html = `<${this.node.tagName.toLowerCase()} class="${Array.from(this.node.classList).join(' ')}">`;
-
-    if (this.node.textContent) {
-      html += this.node.textContent;
-    }
-
-    this.children.forEach((child) => {
-      html += child.toString();
-    });
-
-    html += `</${this.node.tagName.toLowerCase()}>`;
-
-    return html;
+    return this.node.outerHTML;
   }
+}
+
+export function bc$<T extends HTMLElement = HTMLElement>(props: Props<T>, ...children: PossibleChild[]) {
+  return new BaseComponent<T>(props, ...children);
 }
