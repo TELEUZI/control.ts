@@ -1,5 +1,11 @@
 # @control.ts/min
 
+## 0.1.4
+
+### Patch Changes
+
+- dd0695d: Add tests, improve API for module
+
 ## 0.1.3
 
 ### Patch Changes
