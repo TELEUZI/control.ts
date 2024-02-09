@@ -5,7 +5,7 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "lint:fix": "eslint . --fix",
+    "lint:fix": "eslint . --fix --ext=ts",
     "prepare": "husky install",
     "format": "prettier --write --ignore-unknown .",
     "add-changeset": "changeset add",

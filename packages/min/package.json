@@ -12,6 +12,8 @@
     "dev": "tsc --noEmit --watch",
     "build": "vite build && tsc --project tsconfig.build.json --declaration --emitDeclarationOnly --outDir dist",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "test": "vitest",
+    "coverage": "vitest run --coverage",
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix ./src",
     "type-check": "tsc --noEmit",
@@ -21,9 +23,12 @@
     "@control.ts/eslint-config": "workspace:*",
     "@control.ts/typescript-config": "workspace:*",
     "@types/eslint": "^8.56.1",
+    "@vitest/coverage-v8": "^1.2.2",
     "eslint": "^8.56.0",
+    "jsdom": "^24.0.0",
     "typescript": "^5.3.3",
-    "vite": "^4.1.2"
+    "vite": "^4.1.2",
+    "vitest": "^1.2.2"
   },
   "exports": {
     ".": {

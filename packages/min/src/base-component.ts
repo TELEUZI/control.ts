@@ -12,7 +12,7 @@ export type PossibleChild = HTMLElement | BaseComponent | null;
 export class BaseComponent<T extends HTMLElement = HTMLElement> {
   protected _node: T;
 
-  protected children: BaseComponent[] = [];
+  public children: BaseComponent[] = [];
 
   constructor(p: Props<T>, ...children: PossibleChild[]) {
     p.txt && (p.textContent = p.txt);
