@@ -12,7 +12,8 @@ export function createElement<T extends TagName>(tag: T, props: ElementFnProps, 
 }
 
 export function createElementFactory<T extends TagName>(tag: T) {
-  return (props: ElementFnProps, ...children: HTMLElement[]) => createElement(tag, props, ...children);
+  return (props: ElementFnProps<HTMLElementTagNameMap[T]>, ...children: HTMLElement[]) =>
+    createElement(tag, props, ...children);
 }
 
 export function createElementFactoryWithCustomProps<T extends TagName, P extends Partial<ElementFnProps>>(

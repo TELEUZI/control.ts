@@ -10,7 +10,7 @@ export type Props<T extends HTMLElement = HTMLElement> = Partial<
 export type PossibleChild = HTMLElement | BaseComponent | null;
 
 export class BaseComponent<T extends HTMLElement = HTMLElement> {
-  protected node: T;
+  protected _node: T;
 
   protected children: BaseComponent[] = [];
 
@@ -18,16 +18,20 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
     p.txt && (p.textContent = p.txt);
     const node = document.createElement(p.tag ?? 'div') as T;
     Object.assign(node, p);
-    this.node = node;
+    this._node = node;
     if (children) {
       this.appendChildren(children.filter(isNotNullable));
     }
   }
 
+  public get node(): Readonly<T> {
+    return this._node;
+  }
+
   public append(child: NonNullable<PossibleChild>): void {
     if (child instanceof BaseComponent) {
       this.children.push(child);
-      this.node.append(child.getNode());
+      this.node.append(child.node);
     } else {
       this.node.append(child);
     }
@@ -40,11 +44,7 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
   }
 
   public setTextContent(text: string): void {
-    this.node.textContent = text;
-  }
-
-  public getNode() {
-    return this.node;
+    this._node.textContent = text;
   }
 
   public addClass(className: string): void {
@@ -72,18 +72,10 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
   }
 
   public toString(): string {
-    let html = `<${this.node.tagName.toLowerCase()} class="${Array.from(this.node.classList).join(' ')}">`;
-
-    if (this.node.textContent) {
-      html += this.node.textContent;
-    }
-
-    this.children.forEach((child) => {
-      html += child.toString();
-    });
-
-    html += `</${this.node.tagName.toLowerCase()}>`;
-
-    return html;
+    return this.node.outerHTML;
   }
+}
+
+export function bc$<T extends HTMLElement = HTMLElement>(props: Props<T>, ...children: PossibleChild[]) {
+  return new BaseComponent<T>(props, ...children);
 }
