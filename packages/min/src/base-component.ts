@@ -1,10 +1,11 @@
 import { isNotNullable } from './utils/is-nullable';
 
 export type Props<T extends HTMLElement = HTMLElement> = Partial<
-  Omit<T, 'style' | 'dataset' | 'classList' | 'children' | 'tagName'>
+  Omit<T, 'style' | 'classList' | 'children' | 'tagName'>
 > & {
   txt?: string;
   tag?: keyof HTMLElementTagNameMap;
+  style?: Partial<CSSStyleDeclaration>;
 };
 
 export type PossibleChild = HTMLElement | BaseComponent | null;
@@ -18,6 +19,14 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
     p.txt && (p.textContent = p.txt);
     const node = document.createElement(p.tag ?? 'div') as T;
     Object.assign(node, p);
+    if (p.style) {
+      Object.entries(p.style)
+        .filter((entry) => !!entry[1])
+        .forEach((key, value) => {
+          // @ts-expect-error - TS doesn't like the fact that we're using a string index to access the style object
+          node.style[key] = value;
+        });
+    }
     this._node = node;
     if (children) {
       this.appendChildren(children.filter(isNotNullable));
