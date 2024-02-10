@@ -1,0 +1,35 @@
+{
+  "name": "@control.ts/storybook",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "preview": "serve storybook-static",
+    "storybook": "pnpm run dev",
+    "build-storybook": "storybook build",
+    "lint": "eslint ./stories",
+    "lint:fix": "eslint --fix ./stories"
+  },
+  "dependencies": {
+    "@control.ts/design-system": "workspace:*",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
+  },
+  "devDependencies": {
+    "@control.ts/eslint-config": "workspace:*",
+    "@control.ts/prettier-config": "workspace:*",
+    "@control.ts/typescript-config": "workspace:*",
+    "@storybook/addon-essentials": "^7.6.13",
+    "@storybook/addon-interactions": "^7.6.13",
+    "@storybook/addon-links": "^7.6.13",
+    "@storybook/blocks": "^7.6.13",
+    "@storybook/builder-vite": "^7.6.13",
+    "@storybook/html": "^7.6.13",
+    "@storybook/html-vite": "^7.6.13",
+    "@storybook/test": "^7.6.13",
+    "serve": "^14.2.1",
+    "storybook": "^7.6.13",
+    "typescript": "^5.3.3",
+    "vite": "^4.1.2"
+  }
+}

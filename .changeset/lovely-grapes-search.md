@@ -1,5 +1,5 @@
 ---
-"@control.ts/min": patch
+'@control.ts/min': patch
 ---
 
 Add styles property to interface
