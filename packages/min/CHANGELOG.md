@@ -1,5 +1,11 @@
 # @control.ts/min
 
+## 0.1.6
+
+### Patch Changes
+
+- 70f3448: Add styles property to interface
+
 ## 0.1.5
 
 ### Patch Changes
