@@ -2,6 +2,8 @@ FROM node:20-alpine
 
 RUN apk add --no-cache libc6-compat
 
+RUN npx turbo build
+
 RUN npm i -g pnpm
 
 WORKDIR /control.ts
