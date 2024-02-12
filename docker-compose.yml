@@ -1,6 +1,9 @@
 version: "3"
 services:
   storybook:
+    restart: always
+    volumes:
+      - .:/control.ts
     ports:
     - "6006:6006"
     build: .
