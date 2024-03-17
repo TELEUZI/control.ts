@@ -2,17 +2,22 @@ import { defineConfig } from 'vite';
 import { libInjectCss } from 'vite-plugin-lib-inject-css';
 import { readdirSync } from 'fs';
 
-const components = readdirSync('src/', 'utf-8');
+const components = readdirSync('src/', { recursive: true, encoding: 'utf-8' });
 const componentsEntries = components
   .filter((component) => component.endsWith('.ts'))
-  .map((component) => `src/${component}`);
+  .map((component) => {
+    console.log(component);
+    return `src/${component}`;
+  });
+
+console.log(componentsEntries);
 
 export default defineConfig({
   build: {
     copyPublicDir: false,
     lib: {
-      entry: componentsEntries,
       formats: ['cjs', 'es'],
+      entry: componentsEntries,
     },
     sourcemap: true,
     target: 'es2020',
