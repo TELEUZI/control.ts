@@ -7,7 +7,7 @@ export type BaseComponentChild<T extends HTMLElement = HTMLElement> = ComponentC
 export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<T> {
   protected _node: T;
 
-  public children: BaseComponent[] = [];
+  public subscriptions: Unsubscribe[] = [];
 
   constructor(p: ComponentProps<T>, ...children: BaseComponentChild[]) {
     super();
@@ -21,12 +21,12 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
     if (children.length > 0) {
       this.appendChildren(children);
     }
+    this._node = node;
   }
 
   public append(child: NonNullable<BaseComponentChild>): void {
     if (child instanceof BaseComponent) {
       this._node.append(child.node);
-      this.children.push(child);
     } else {
       this._node.append(child);
     }
