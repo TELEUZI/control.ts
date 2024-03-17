@@ -8,14 +8,18 @@ export type Props<T extends HTMLElement = HTMLElement> = Partial<
   style?: Partial<CSSStyleDeclaration>;
 };
 
-export type PossibleChild = HTMLElement | BaseComponent | null;
+export type Unsubscribe = () => void;
 
-export class BaseComponent<T extends HTMLElement = HTMLElement> {
+export type PossibleChild<C extends HTMLElement = HTMLElement> = HTMLElement | BaseComponent<C> | null;
+
+export class BaseComponent<T extends HTMLElement = HTMLElement, C extends HTMLElement = HTMLElement> {
   protected _node: T;
 
-  public children: BaseComponent[] = [];
+  protected children: BaseComponent<C>[] = [];
 
-  constructor(p: Props<T>, ...children: PossibleChild[]) {
+  public subscriptions: Unsubscribe[] = [];
+
+  constructor(p: Props<T>, ...children: PossibleChild<C>[]) {
     p.txt && (p.textContent = p.txt);
     const node = document.createElement(p.tag ?? 'div') as T;
     Object.assign(node, p);
@@ -27,29 +31,30 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
           node.style[key] = value;
         });
     }
-    this._node = node;
-    if (children) {
-      this.appendChildren(children.filter(isNotNullable));
+    if (children.length > 0) {
+      this.appendChildren(children);
     }
+    this._node = node;
   }
 
   public get node(): Readonly<T> {
     return this._node;
   }
 
-  public append(child: NonNullable<PossibleChild>): void {
+  public append(child: NonNullable<PossibleChild<C>>): void {
     if (child instanceof BaseComponent) {
+      this._node.append(child.node);
       this.children.push(child);
-      this.node.append(child.node);
     } else {
-      this.node.append(child);
+      this._node.append(child);
     }
   }
 
-  public appendChildren(children: PossibleChild[]): void {
-    children.filter(isNotNullable).forEach((el) => {
-      this.append(el);
-    });
+  public appendChildren(possibleChildren: (PossibleChild<C> | null)[]): void {
+    const children = possibleChildren.filter(isNotNullable);
+    for (const child of children) {
+      this.append(child);
+    }
   }
 
   public setTextContent(text: string): void {
@@ -57,31 +62,57 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
   }
 
   public addClass(className: string): void {
-    this.node.classList.add(className);
+    this._node.classList.add(className);
   }
 
-  public toggleClass(className: string): void {
-    this.node.classList.toggle(className);
+  public toggleClass(className: string, force?: boolean): void {
+    this._node.classList.toggle(className, force);
   }
 
   public removeClass(className: string): void {
-    this.node.classList.remove(className);
+    this._node.classList.remove(className);
   }
 
   public destroyChildren(): void {
-    this.children.forEach((child) => {
+    for (const child of this.children) {
       child.destroy();
-    });
-    this.children.length = 0;
+    }
   }
 
   public destroy(): void {
     this.destroyChildren();
-    this.node.remove();
+    this._node.remove();
+    this.unsubscribeAll();
   }
 
   public toString(): string {
-    return this.node.outerHTML;
+    return this._node.outerHTML;
+  }
+
+  public subscribe(subscription: Unsubscribe): void {
+    this.subscriptions.push(subscription);
+  }
+
+  public unsubscribeAll(): void {
+    for (const unsubscribe of this.subscriptions) {
+      unsubscribe();
+    }
+  }
+
+  public on(event: string, callback: (e: Event) => void): void {
+    this._node.addEventListener(event, callback);
+  }
+
+  public off(event: string, callback: (e: Event) => void): void {
+    this._node.removeEventListener(event, callback);
+  }
+
+  public setAttribute(name: string, value: string): void {
+    this._node.setAttribute(name, value);
+  }
+
+  public removeAttribute(name: string): void {
+    this._node.removeAttribute(name);
   }
 }
 
