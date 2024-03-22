@@ -21,7 +21,6 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
     if (children.length > 0) {
       this.appendChildren(children);
     }
-    this._node = node;
   }
 
   public append(child: NonNullable<BaseComponentChild>): void {
