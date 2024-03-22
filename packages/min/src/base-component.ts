@@ -17,13 +17,13 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
     p.txt && (p.textContent = p.txt);
     const node = document.createElement(p.tag ?? 'div') as T;
     Object.assign(node, p);
+    this._node = node;
     if (p.style) {
       this.applyStyle(p.style);
     }
     if (children.length > 0) {
       this.appendChildren(children);
     }
-    this._node = node;
   }
 
   public append(child: NonNullable<BaseComponentChild>): void {
