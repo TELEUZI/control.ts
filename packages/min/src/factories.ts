@@ -1,38 +1,18 @@
-import type { PossibleChild, Props } from './base-component';
+import type { TagName } from '@control.ts/control';
+
+import type { BaseComponentChild, BaseComponentProps } from './base-component';
 import { BaseComponent } from './base-component';
-
-type TagName = keyof HTMLElementTagNameMap;
-export type ElementFnProps<T extends HTMLElement = HTMLElement> = Omit<Props<T>, 'tag'>;
-
-export function createElement<T extends TagName>(tag: T, props: ElementFnProps, ...children: HTMLElement[]) {
-  const node = document.createElement(tag);
-  props.textContent = props.txt;
-  Object.assign(node, props);
-  children.forEach((child) => node.append(child));
-  return node;
-}
-
-export function createElementFactory<T extends TagName>(tag: T) {
-  return (props: ElementFnProps<HTMLElementTagNameMap[T]>, ...children: HTMLElement[]) =>
-    createElement(tag, props, ...children);
-}
-
-export function createElementFactoryWithCustomProps<T extends TagName, P extends Partial<ElementFnProps>>(
-  tag: T,
-  props: P,
-) {
-  return (customProps: Partial<P>, ...children: HTMLElement[]) =>
-    createElement<T>(tag, { ...props, ...customProps }, ...children);
-}
+export type { ElementFnProps, TagName } from '@control.ts/control';
+export { createElement, createElementFactory, createElementFactoryWithCustomProps } from '@control.ts/control';
 
 export function createElement$<T extends TagName>(
-  props: Props<HTMLElementTagNameMap[T]> & { tag: T },
-  children?: PossibleChild[],
+  props: BaseComponentProps<HTMLElementTagNameMap[T]> & { tag: T },
+  children?: BaseComponentChild[],
 ) {
   return new BaseComponent<HTMLElementTagNameMap[T]>(props, ...(children ?? []));
 }
 
 export function createElementFactory$<T extends TagName>(tag: T) {
-  return (props: Props<HTMLElementTagNameMap[T]>, ...children: PossibleChild[]) =>
+  return (props: BaseComponentProps<HTMLElementTagNameMap[T]>, ...children: BaseComponentChild[]) =>
     createElement$({ tag, ...props }, children);
 }

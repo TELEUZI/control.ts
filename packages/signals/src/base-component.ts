@@ -1,14 +1,9 @@
+import type { Props } from '@control.ts/control';
+import { Control, type PossibleChild } from '@control.ts/control';
 import { Signal } from '@preact/signals-core';
 
+import { isSignal } from './utils';
 import { isNotNullable } from './utils/is-nullable';
-
-export type Props<T extends HTMLElement = HTMLElement> = Partial<
-  Omit<T, 'style' | 'classList' | 'children' | 'tagName'>
-> & {
-  txt?: string;
-  tag?: keyof HTMLElementTagNameMap;
-  style?: Partial<CSSStyleDeclaration>;
-};
 
 export type SignalProps<T extends HTMLElement = HTMLElement> = {
   [K in keyof Props<T>]: Signal<Props<T>[K]> | Props<T>[K];
@@ -17,22 +12,23 @@ export type SignalProps<T extends HTMLElement = HTMLElement> = {
   style?: Partial<CSSStyleDeclaration>;
 };
 
-export type Unsubscribe = () => void;
+export type BaseComponentProps<T extends HTMLElement = HTMLElement> = SignalProps<T>;
 
-function isSignal<T>(value: T | Signal<T>): value is Signal<T> {
-  return value instanceof Signal;
-}
+export type BaseComponentChild<T extends HTMLElement = HTMLElement> =
+  | PossibleChild<T, BaseComponent<T>>
+  | Signal<BaseComponent<T> | null>;
 
-export type PossibleChild = HTMLElement | BaseComponent | null;
-
-export class BaseComponent<T extends HTMLElement = HTMLElement> {
+export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<T> {
   protected _node: T;
 
-  public subscriptions: Unsubscribe[] = [];
+  public override children: BaseComponent[] = [];
 
-  constructor(p: SignalProps<T>, ...children: (PossibleChild | Signal<PossibleChild>)[]) {
+  constructor(p: SignalProps<T>, ...children: BaseComponentChild[]) {
+    super();
     this._node = document.createElement(p.tag ?? 'div') as T;
-    p.textContent = p.txt;
+    if (p.txt) {
+      p.textContent = p.txt;
+    }
     this.applyProps(p);
     if (p.style) {
       this.applyStyle(p.style);
@@ -42,14 +38,12 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
     }
   }
 
-  public get node(): Readonly<T> {
-    return this._node;
-  }
-
   private applyProps(p: SignalProps<T>) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const node: Record<string, any> = this._node;
-    Object.entries(p).forEach(([key, value]) => {
+    const node = this._node as Record<string, unknown>;
+    for (const [key, value] of Object.entries(p)) {
+      if (key === 'tag' || key === 'tagName' || key === 'txt' || key === 'style') {
+        continue;
+      }
       if (isSignal(value)) {
         const sub = value.subscribe((newValue) => {
           node[key] = newValue;
@@ -59,34 +53,40 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
       } else {
         node[key] = value;
       }
-    });
+    }
   }
 
-  private applyStyle(style: Partial<CSSStyleDeclaration>): void {
-    Object.entries(style).forEach(([key, value]) => {
-      // @ts-expect-error - TS doesn't like the fact that we're using a string index to access the style object
-      this._node.style[key] = value;
-    });
-  }
-
-  public append(child: NonNullable<PossibleChild> | Signal<PossibleChild | null>): void {
+  public append(child: NonNullable<BaseComponentChild>): void {
     if (child instanceof BaseComponent) {
       this._node.append(child.node);
+      this.children.push(child);
     } else if (child instanceof Signal) {
       const empty = document.createComment('comment');
       this._node.append(empty);
-      let prevValue: PossibleChild | null = null;
+      let prevValue: PossibleChild<HTMLElement, BaseComponent> = null;
       this.subscriptions.push(
         child.subscribe((value) => {
-          console.log(value, prevValue);
-          if (value !== null && prevValue == null) {
-            empty.replaceWith(value instanceof BaseComponent ? value.node : value);
+          if (value !== null) {
+            const isComponent = value instanceof BaseComponent;
+            if (isComponent) {
+              this.children.push(value);
+            }
+            const node = isComponent ? value.node : value;
+            if (prevValue !== null) {
+              if (prevValue instanceof BaseComponent) {
+                this.children.push(prevValue);
+              }
+              prevValue.replaceWith(node);
+            } else {
+              empty.replaceWith(node);
+            }
             prevValue = value;
-          } else if (value === null && prevValue !== null) {
+          } else if (prevValue !== null) {
             prevValue.replaceWith(empty);
-          } else if (value !== null && prevValue !== null) {
-            prevValue.replaceWith(value instanceof BaseComponent ? value.node : value);
-            prevValue = value;
+            if (prevValue instanceof BaseComponent) {
+              this.removeFromChildren(prevValue);
+            }
+            prevValue = null;
           }
         }),
       );
@@ -95,52 +95,17 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> {
     }
   }
 
-  public appendChildren(children: (PossibleChild | Signal<PossibleChild | null>)[]): void {
+  public appendChildren(children: BaseComponentChild[]): void {
     children.filter(isNotNullable).forEach((el) => {
       this.append(el);
     });
   }
 
-  public setTextContent(text: string): void {
-    this._node.textContent = text;
-  }
-
-  public replaceWith(child: NonNullable<PossibleChild> | Comment) {
-    const newNode = child instanceof BaseComponent ? child.node : child;
-    this._node.replaceWith(newNode);
-    this._node = newNode as T;
-  }
-
-  public addClass(className: string): void {
-    this._node.classList.add(className);
-  }
-
-  public toggleClass(className: string): void {
-    this._node.classList.toggle(className);
-  }
-
-  public removeClass(className: string): void {
-    this._node.classList.remove(className);
-  }
-
-  public destroy(): void {
-    this._node.remove();
-    this.subscriptions.forEach((sub) => sub());
-  }
-
-  public toString(): string {
-    return this._node.outerHTML;
-  }
-
-  public subscribe(subscription: Unsubscribe): void {
-    this.subscriptions.push(subscription);
-  }
-
-  public unsubscribeAll(): void {
-    this.subscriptions.forEach((sub) => sub());
+  public replaceWith(child: BaseComponent | HTMLElement | Comment): void {
+    this._node.replaceWith(child instanceof BaseComponent ? child.node : child);
   }
 }
 
-export function bc$<T extends HTMLElement = HTMLElement>(props: Props<T>, ...children: PossibleChild[]) {
+export function bc$<T extends HTMLElement = HTMLElement>(props: Props<T>, ...children: BaseComponentChild[]) {
   return new BaseComponent<T>(props, ...children);
 }

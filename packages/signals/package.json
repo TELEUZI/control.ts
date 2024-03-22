@@ -78,6 +78,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@control.ts/control": "workspace:*",
     "@preact/signals-core": "^1.5.1"
   }
 }
