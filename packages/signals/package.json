@@ -1,7 +1,7 @@
 {
-  "name": "@control.ts/min",
-  "description": "A minimal version of the control.ts library. Contains base components for easy creating HTML elements with functions.",
-  "version": "0.1.6",
+  "name": "@control.ts/signals",
+  "description": "A signal-based version of the control.ts library. Contains base components for easy creating HTML elements with functions.",
+  "version": "0.0.1",
   "author": "Yauheni Tsurankou <ikk.pott@gmail.com> (https://github.com/TELEUZI/TELEUZI)",
   "repository": {
     "directory": "packages/min",
@@ -18,9 +18,6 @@
     "lint:fix": "eslint --fix ./src",
     "type-check": "tsc --noEmit",
     "update-html-tags": "pnpm run --filter=@control.ts/tags-scraper start && pnpm run lint:fix"
-  },
-  "dependencies": {
-    "@control.ts/control": "workspace:*"
   },
   "devDependencies": {
     "@control.ts/eslint-config": "workspace:*",
@@ -63,6 +60,16 @@
       "types": "./dist/mount.d.ts",
       "require": "./dist/mount.js",
       "import": "./dist/mount.mjs"
+    },
+    "./signals": {
+      "types": "./dist/signals.d.ts",
+      "require": "./dist/signals.js",
+      "import": "./dist/signals.mjs"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "require": "./dist/utils.js",
+      "import": "./dist/utils.mjs"
     }
   },
   "main": "./dist/index.js",
@@ -74,5 +81,9 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@control.ts/control": "workspace:*",
+    "@preact/signals-core": "^1.5.1"
   }
 }

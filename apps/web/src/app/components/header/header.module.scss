@@ -1,0 +1,30 @@
+.header {
+  display: flex;
+  padding: 1rem 0.5rem;
+  background-color: var(--orange);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  height: 3rem;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--black);
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    color: var(--white);
+  }
+}
+
+.link {
+  text-decoration: none;
+}
