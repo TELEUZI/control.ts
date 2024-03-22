@@ -1,5 +1,13 @@
 # @control.ts/min
 
+## 0.1.7
+
+### Patch Changes
+
+- 28b6290: Move base logic to the control package
+- Updated dependencies [28b6290]
+  - @control.ts/control@0.0.2
+
 ## 0.1.6
 
 ### Patch Changes
