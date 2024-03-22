@@ -65,6 +65,11 @@
       "types": "./dist/signals.d.ts",
       "require": "./dist/signals.js",
       "import": "./dist/signals.mjs"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "require": "./dist/utils.js",
+      "import": "./dist/utils.mjs"
     }
   },
   "main": "./dist/index.js",
