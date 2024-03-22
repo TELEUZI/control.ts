@@ -10,8 +10,6 @@ const componentsEntries = components
     return `src/${component}`;
   });
 
-console.log(componentsEntries);
-
 export default defineConfig({
   build: {
     copyPublicDir: false,

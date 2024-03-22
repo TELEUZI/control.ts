@@ -1,4 +1,4 @@
-import { BaseComponent } from '@control.ts/min';
+import { BaseComponent } from '@control.ts/min/base-component';
 
 import styles from './button.module.scss';
 
