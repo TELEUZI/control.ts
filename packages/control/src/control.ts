@@ -2,6 +2,13 @@ export type Unsubscribe = () => void;
 
 export type PossibleChild<C extends HTMLElement, Component> = C | Component | null;
 
+export type ComponentProps<T extends HTMLElement = HTMLElement> = Props<T>;
+
+export type ComponentChild<T extends HTMLElement = HTMLElement, Component extends Control = Control> = PossibleChild<
+  T,
+  Component
+>;
+
 export type Props<T extends HTMLElement = HTMLElement> = Partial<
   Omit<T, 'style' | 'classList' | 'children' | 'tagName'>
 > & {
