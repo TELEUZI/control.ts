@@ -1,0 +1,23 @@
+{
+  "name": "@control.ts/tags-scraper",
+  "private": true,
+  "scripts": {
+    "start": "ts-node ./src/index.ts",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint --fix ./src",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@control.ts/eslint-config": "workspace:*",
+    "@control.ts/typescript-config": "workspace:*",
+    "@types/eslint": "^8.56.1",
+    "@types/node": "^20.11.17",
+    "eslint": "^8.56.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "cheerio": "1.0.0-rc.12"
+  }
+}
