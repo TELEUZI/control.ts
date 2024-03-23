@@ -1,4 +1,0 @@
-{
-  "*.{json,js,ts,html}": ["pnpm run format"],
-  "*.{js,ts}": ["pnpm run lint:fix"]
-}

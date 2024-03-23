@@ -1,7 +1,0 @@
-{
-  "name": "@control.ts/prettier-config",
-  "version": "0.0.0",
-  "private": true,
-  "main": "index.js",
-  "license": "MIT"
-}

@@ -1,8 +1,0 @@
-{
-  "eslint.workingDirectories": [
-    {
-      "mode": "auto"
-    }
-  ],
-  "cssModules.camelCase": true
-}
