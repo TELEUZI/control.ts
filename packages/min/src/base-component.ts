@@ -1,18 +1,17 @@
-import type { PossibleChild, Props } from '@control.ts/control';
+import type { ComponentChild, ComponentProps, Props } from '@control.ts/control';
 import { Control } from '@control.ts/control';
 
 import { isNotNullable } from './utils/is-nullable';
 
-export type BaseComponentProps<T extends HTMLElement = HTMLElement> = Props<T>;
-
-export type BaseComponentChild<T extends HTMLElement = HTMLElement> = PossibleChild<T, BaseComponent<T>>;
+export type BaseComponentProps<T extends HTMLElement = HTMLElement> = ComponentProps<T>;
+export type BaseComponentChild<T extends HTMLElement = HTMLElement> = ComponentChild<T, BaseComponent>;
 
 export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<T> {
   protected _node: T;
 
   public override children: BaseComponent[] = [];
 
-  constructor(p: BaseComponentProps<T>, ...children: BaseComponentChild[]) {
+  constructor(p: ComponentProps<T>, ...children: BaseComponentChild[]) {
     super();
     p.txt && (p.textContent = p.txt);
     const node = document.createElement(p.tag ?? 'div') as T;
