@@ -1,7 +1,5 @@
 import type { ComponentChild, ComponentProps, Props } from '@control.ts/control';
-import { Control } from '@control.ts/control';
-
-import { isNotNullable } from './utils/is-nullable';
+import { Control, isNotNullable } from '@control.ts/control';
 
 export type BaseComponentProps<T extends HTMLElement = HTMLElement> = ComponentProps<T>;
 export type BaseComponentChild<T extends HTMLElement = HTMLElement> = ComponentChild<T, BaseComponent>;

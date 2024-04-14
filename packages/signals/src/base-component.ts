@@ -1,9 +1,8 @@
 import type { Props } from '@control.ts/control';
-import { Control, type PossibleChild } from '@control.ts/control';
+import { Control, isNotNullable, type PossibleChild } from '@control.ts/control';
 import { Signal } from '@preact/signals-core';
 
 import { isSignal } from './utils';
-import { isNotNullable } from './utils/is-nullable';
 
 export type SignalProps<T extends HTMLElement = HTMLElement> = {
   [K in keyof Props<T>]: Signal<Props<T>[K]> | Props<T>[K];
