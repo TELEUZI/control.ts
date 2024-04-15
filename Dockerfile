@@ -1,19 +1,30 @@
-FROM node:20-alpine
+FROM node:20-alpine AS base
 
-RUN apk add --no-cache libc6-compat
+RUN corepack enable
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 
-RUN npx turbo build
-
-RUN npm i -g pnpm
-
+FROM base AS builder
 WORKDIR /control.ts
 
-COPY package*.json .
+COPY package.json .
+COPY pnpm-lock.yaml .
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN apk add --no-cache libc6-compat
+
+RUN pnpm install -g turbo
 
 COPY . .
 
-RUN pnpm i
+RUN turbo prune --scope @control.ts/storybook --docker
 
-EXPOSE ${PORT}
+FROM base AS runner
 
-CMD [ "npm", "run", "dev" ]
+WORKDIR /control.ts
+
+COPY --from=builder /control.ts/out/full .
+COPY turbo.json turbo.json
+
+EXPOSE 6006
+CMD pnpm --dir ./apps/storybook/ run dev
