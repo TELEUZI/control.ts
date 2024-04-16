@@ -1,33 +1,31 @@
-FROM node:20-alpine AS base
-
+FROM node:21.7.2-alpine AS base
+WORKDIR /control.ts
+RUN apk add --no-cache libc6-compat
 RUN corepack enable
-
+RUN corepack use pnpm@9.0.1
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
-RUN apk add --no-cache libc6-compat
-
 FROM base AS builder
-WORKDIR /control.ts
-
+RUN pnpm install -g turbo
 COPY package.json .
 COPY pnpm-lock.yaml .
-
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-
-RUN pnpm install -g turbo
-
 COPY . .
+RUN turbo prune --docker @control.ts/storybook
 
-RUN turbo prune --scope @control.ts/storybook --docker
-RUN pnpm i
-RUN pnpm --dir ./apps/storybook run build-storybook
+FROM base as installer
+RUN pnpm install -g turbo
+COPY --from=builder /control.ts/out/json/ .
+COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
+RUN pnpm -v
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+COPY --from=builder /control.ts/out/full .
+RUN turbo build --filter=web
+RUN pnpm run --dir ./apps/storybook build-storybook
 
 FROM base AS runner
-WORKDIR /control.ts
-
-COPY --from=builder /control.ts/out/full .
+COPY --from=installer /control.ts/apps/storybook/storybook-static .
 COPY turbo.json turbo.json
-
-EXPOSE 8080
-CMD npx http-server /control.ts/out/full/storybook-static
+EXPOSE 3000
+RUN pnpm i -g serve
+CMD serve .
