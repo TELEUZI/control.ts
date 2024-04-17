@@ -1,0 +1,7 @@
+services:
+  storybook:
+    build:
+      dockerfile: ./apps/storybook/Dockerfile
+      context: .
+    ports:
+      - 3000:3000
