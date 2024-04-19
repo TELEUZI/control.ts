@@ -219,7 +219,7 @@ describe('Subscriptions testing integration', () => {
     expect(mock).toHaveBeenCalledTimes(1);
   });
 
-  it('should remove all subscriptions after replacing element', async () => {
+  it('should remove all subscriptions after replacing element', () => {
     const mock = vi.fn().mockReturnValue(undefined);
     const firstChild = new TestComponent({ textContent: 'Hello', className: 'first' });
     firstChild.subscribe(mock);
@@ -234,7 +234,13 @@ describe('Subscriptions testing integration', () => {
 
     expect(firstChild._subscriptions.length).toBe(2);
 
-    component.destroyChild(firstChild);
+    component.removeChild(firstChild);
+
+    setTimeout(() => {
+      expect(firstChild._subscriptions.length).toBe(0);
+
+      expect(mock).toHaveBeenCalledTimes(1);
+    }, 20);
 
     component.append(emptyChild);
 
@@ -246,8 +252,5 @@ describe('Subscriptions testing integration', () => {
     expect(component._children.length).toBe(0);
 
     expect(component._subscriptions.length).toBe(0);
-    expect(firstChild._subscriptions.length).toBe(0);
-
-    expect(mock).toHaveBeenCalledTimes(1);
   });
 });

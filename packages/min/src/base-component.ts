@@ -1,15 +1,14 @@
 import type { ComponentChild, ComponentProps, Props } from '@control.ts/control';
-import { Control, isNotNullable } from '@control.ts/control';
+import { Control, initObserver, isNotNullable, registerComponent } from '@control.ts/control';
 
 export type BaseComponentProps<T extends HTMLElement = HTMLElement> = ComponentProps<T>;
 export type BaseComponentChild<T extends HTMLElement = HTMLElement> = ComponentChild<T, BaseComponent>;
 
+initObserver();
 export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<T> {
   protected _node: T;
 
-  public subscriptions: Unsubscribe[] = [];
-
-  constructor(p: ComponentProps<T>, ...children: BaseComponentChild[]) {
+  constructor(p: BaseComponentProps<T>, ...children: BaseComponentChild[]) {
     super();
     p.txt && (p.textContent = p.txt);
     const node = document.createElement(p.tag ?? 'div') as T;
@@ -21,9 +20,10 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
     if (children.length > 0) {
       this.appendChildren(children);
     }
+    registerComponent(this);
   }
 
-  public append(child: NonNullable<BaseComponentChild>): void {
+  public append<C extends HTMLElement>(child: BaseComponent<C> | HTMLElement): void {
     if (child instanceof BaseComponent) {
       this._node.append(child.node);
     } else {

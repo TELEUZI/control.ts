@@ -20,8 +20,6 @@ export type Props<T extends HTMLElement = HTMLElement> = Partial<
 export abstract class Control<T extends HTMLElement = HTMLElement> {
   protected abstract _node: T;
 
-  protected abstract children: Control[];
-
   public subscriptions: Unsubscribe[] = [];
 
   public get node(): T {
@@ -45,10 +43,7 @@ export abstract class Control<T extends HTMLElement = HTMLElement> {
   }
 
   public destroyChildren(): void {
-    for (const child of this.children) {
-      child.destroy();
-    }
-    this.children = [];
+    this._node.textContent = '';
   }
 
   public destroy(): void {
@@ -104,11 +99,6 @@ export abstract class Control<T extends HTMLElement = HTMLElement> {
 
   public removeChild(child: Control): void {
     this._node.removeChild(child.node);
-    this.removeFromChildren(child);
-  }
-
-  protected removeFromChildren(child: Control): void {
-    this.children = this.children.filter((c) => c !== child);
   }
 
   public destroyChild(child: Control): void {

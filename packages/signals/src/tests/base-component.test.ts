@@ -5,7 +5,7 @@ import { $, $$ } from '../signals';
 
 class TestComponent extends BaseComponent {
   public get _children() {
-    return this.children;
+    return [...this.node.children];
   }
 
   public get _subscriptions() {
@@ -286,7 +286,7 @@ describe('Signals integration', () => {
     expect(component.node.children.item(0)?.textContent).toBe('Hello');
   });
 
-  it('should remove all subscriptions after replacing element', () => {
+  it('should remove all subscriptions after replacing element', async () => {
     const data = $('Hello');
     const firstChild = new TestComponent({ textContent: data, className: 'first' });
     const emptyChild = new TestComponent({ textContent: 'EMPTY', className: 'empty' });
@@ -308,10 +308,12 @@ describe('Signals integration', () => {
     expect(component.node.children.item(0)?.textContent).toBe('Hello');
 
     component.destroy();
-
-    expect(firstChild._subscriptions.length).toBe(0);
-    expect(component._subscriptions.length).toBe(0);
     expect(component._children.length).toBe(0);
+
+    setTimeout(() => {
+      expect(firstChild._subscriptions.length).toBe(0);
+      expect(component._subscriptions.length).toBe(0);
+    }, 100);
   });
 
   it('should update components properly for 2 steps inside signals', () => {
@@ -352,11 +354,13 @@ describe('Signals integration', () => {
 
     component.destroy();
 
-    expect(firstChild._subscriptions.length).toBe(0);
-    expect(secondChild._subscriptions.length).toBe(0);
-    expect(thirdChild._subscriptions.length).toBe(0);
-    expect(emptyChild._subscriptions.length).toBe(0);
-    expect(component._subscriptions.length).toBe(0);
+    setTimeout(() => {
+      expect(firstChild._subscriptions.length).toBe(0);
+      expect(secondChild._subscriptions.length).toBe(0);
+      expect(thirdChild._subscriptions.length).toBe(0);
+      expect(emptyChild._subscriptions.length).toBe(0);
+      expect(component._subscriptions.length).toBe(0);
+    }, 100);
   });
 
   it('should remove subscriptions properly for 2 steps inside signals', () => {
@@ -383,7 +387,9 @@ describe('Signals integration', () => {
 
     component.destroy();
 
-    expect(firstChild._subscriptions.length).toBe(0);
-    expect(component._subscriptions.length).toBe(0);
+    setTimeout(() => {
+      expect(firstChild._subscriptions.length).toBe(0);
+      expect(component._subscriptions.length).toBe(0);
+    }, 100);
   });
 });

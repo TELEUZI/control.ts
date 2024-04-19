@@ -55,6 +55,11 @@
       "types": "./dist/element-tags.d.ts",
       "require": "./dist/element-tags.js",
       "import": "./dist/element-tags.mjs"
+    },
+    "./observer": {
+      "types": "./dist/observer.d.ts",
+      "require": "./dist/observer.js",
+      "import": "./dist/observer.mjs"
     }
   },
   "main": "./dist/index.js",

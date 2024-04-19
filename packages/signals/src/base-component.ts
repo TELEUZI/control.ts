@@ -1,5 +1,5 @@
 import type { Props } from '@control.ts/control';
-import { Control, isNotNullable, type PossibleChild } from '@control.ts/control';
+import { Control, initObserver, isNotNullable, type PossibleChild, registerComponent } from '@control.ts/control';
 import { Signal } from '@preact/signals-core';
 
 import { isSignal } from './utils';
@@ -17,10 +17,10 @@ export type BaseComponentChild<T extends HTMLElement = HTMLElement> =
   | PossibleChild<T, BaseComponent<T>>
   | Signal<BaseComponent<T> | null>;
 
+initObserver();
+
 export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<T> {
   protected _node: T;
-
-  public override children: BaseComponent[] = [];
 
   constructor(p: SignalProps<T>, ...children: BaseComponentChild[]) {
     super();
@@ -35,6 +35,7 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
     if (children.length > 0) {
       this.appendChildren(children);
     }
+    registerComponent(this);
   }
 
   private applyProps(p: SignalProps<T>) {
@@ -58,7 +59,6 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
   public append(child: NonNullable<BaseComponentChild>): void {
     if (child instanceof BaseComponent) {
       this._node.append(child.node);
-      this.children.push(child);
     } else if (child instanceof Signal) {
       const empty = document.createComment('comment');
       this._node.append(empty);
@@ -67,14 +67,8 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
         child.subscribe((value) => {
           if (value !== null) {
             const isComponent = value instanceof BaseComponent;
-            if (isComponent) {
-              this.children.push(value);
-            }
             const node = isComponent ? value.node : value;
             if (prevValue !== null) {
-              if (prevValue instanceof BaseComponent) {
-                this.children.push(prevValue);
-              }
               prevValue.replaceWith(node);
             } else {
               empty.replaceWith(node);
@@ -82,9 +76,6 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
             prevValue = value;
           } else if (prevValue !== null) {
             prevValue.replaceWith(empty);
-            if (prevValue instanceof BaseComponent) {
-              this.removeFromChildren(prevValue);
-            }
             prevValue = null;
           }
         }),
