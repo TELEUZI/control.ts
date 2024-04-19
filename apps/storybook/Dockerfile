@@ -10,13 +10,12 @@ COPY pnpm-lock.yaml .
 COPY . .
 RUN pnpm install -g turbo && turbo prune --docker @control.ts/storybook
 
-FROM base as installer
-RUN pnpm install -g turbo
+FROM base AS installer
 COPY --from=builder /control.ts/out/json/ .
 COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY --from=builder /control.ts/out/full .
-RUN turbo build && pnpm run --dir ./apps/storybook build-storybook
+RUN npx turbo build && pnpm run --dir ./apps/storybook build-storybook
 
 FROM base AS runner
 COPY --from=installer /control.ts/apps/storybook/storybook-static ./storybook-static
