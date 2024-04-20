@@ -3,5 +3,7 @@ services:
     build:
       dockerfile: ./apps/storybook/Dockerfile
       context: .
+    volumes:
+      - ./apps/storybook/:/control.ts/apps/storybook
     ports:
-      - 3000:3000
+      - 6006:6006

@@ -8,17 +8,19 @@ FROM base AS builder
 COPY package.json .
 COPY pnpm-lock.yaml .
 COPY . .
-RUN pnpm install -g turbo && turbo prune --docker @control.ts/storybook
+RUN pnpm install -g turbo@1.13.3-canary.2 && turbo --version &&  turbo prune --docker @control.ts/storybook
 
 FROM base AS installer
 COPY --from=builder /control.ts/out/json/ .
+# TODO: remove this when https://github.com/vercel/turbo/issues/7993 resolves
 COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 COPY --from=builder /control.ts/out/full .
-RUN npx turbo build && pnpm run --dir ./apps/storybook build-storybook
+RUN npx turbo build --filter=@control.ts/storybook
 
 FROM base AS runner
-COPY --from=installer /control.ts/apps/storybook/storybook-static ./storybook-static
-RUN pnpm i -g serve
+COPY --from=installer /control.ts/apps/storybook/ ./apps/storybook
+COPY --from=installer /control.ts/node_modules ./node_modules
+COPY --from=installer /control.ts/packages ./packages
 EXPOSE 3000
-CMD [ "serve", "./storybook-static" ]
+CMD pnpm run --dir ./apps/storybook dev
