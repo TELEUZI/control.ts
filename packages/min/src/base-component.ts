@@ -38,6 +38,14 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
       this.append(child);
     }
   }
+
+  public stylize<K extends keyof CSSStyleDeclaration>(key: K, value: CSSStyleDeclaration[K]) {
+    this._node.style[key] = value;
+  }
+
+  public unstylize<K extends keyof CSSStyleDeclaration>(key: K) {
+    delete this._node.style[key];
+  }
 }
 
 export function bc$<T extends HTMLElement = HTMLElement>(props: Props<T>, ...children: BaseComponentChild[]) {
