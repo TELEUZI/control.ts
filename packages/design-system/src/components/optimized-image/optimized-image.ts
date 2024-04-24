@@ -12,8 +12,14 @@ export type Priority = 'low' | 'high' | 'auto';
  */
 export const DefaultBlurAmount = 15;
 
+/**
+ * Warn data url length
+ */
 export const DataUrlLengthWarn = 3_500;
 
+/**
+ * Maximum dataurl image length
+ */
 export const DataUrlLengthError = 10_000;
 
 export interface OptimizedImageProps {
@@ -34,9 +40,10 @@ export interface OptimizedImageProps {
 
   /**
    * Specifies imagine laziness.
-   * - `browser` default browser laziness
+   * - `lazy` default browser laziness
    * - `eager` non lazy image
-   * - `intersection` lazy load image using `IntersectionObserver`
+   *
+   * lazy by default
    */
   laziness?: Laziness;
 
@@ -46,16 +53,22 @@ export interface OptimizedImageProps {
   alt: string;
 
   /**
-   * Specifies image placeholder which is blurred by `15px`
+   * Specifies image placeholder which is by default blurred by `15px`
    * which is `Base64` string or a `boolean`
    */
   placeholder: string | boolean;
 
   /**
-   * blur amount for the placeholder image in px
+   * blur amount for the placeholder image in pixels
    * by default it is 15px
    */
   blurAmount: number;
+
+  /**
+   * Specifies image filling.
+   * if set to true, height and width are no longer required
+   */
+  fill?: boolean;
 }
 
 export const validatePlaceholder = (placeholder: string) => {
@@ -91,6 +104,15 @@ export const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placehol
   };
 };
 
+const fill = (img: BaseComponent<HTMLImageElement>) => {
+  img.stylize({
+    width: '100%',
+    height: '100%',
+    inset: '0',
+    position: 'absolute',
+  });
+};
+
 /**
  * Optmized image component which enforces best practices for loading images.
  * @returns new `OptimizedImage`
@@ -102,10 +124,11 @@ export const OptimizedImage = ({
   height,
   alt,
   blurAmount,
+  fill: isFill,
   placeholder: placeholderImg,
 }: OptimizedImageProps) => {
-  if (width <= 0 || height <= 0) {
-    throw new Error('Image height and width should be at least 1px');
+  if ((width <= 0 || height <= 0) && !fill) {
+    throw new Error('Image height and width should be at least 1px or fill should be set to true');
   }
 
   const img = new BaseComponent<HTMLImageElement & { fetchPriority: Priority }>({
@@ -119,6 +142,10 @@ export const OptimizedImage = ({
 
   if (typeof placeholderImg === 'string') {
     img.on('load', createPlaceholder(img, placeholderImg, blurAmount));
+  }
+
+  if (isFill) {
+    fill(img);
   }
 
   return img;
