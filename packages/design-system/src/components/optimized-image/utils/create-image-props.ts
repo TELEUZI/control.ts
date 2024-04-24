@@ -3,7 +3,7 @@ import { getPriorityByLaziness } from './priority';
 
 interface LoadingProps {
   fetchPriority: Priority;
-  loading?: Exclude<Laziness, 'intersection'>;
+  loading?: Laziness;
 }
 
 export const createImageProps = (laziness: Laziness): LoadingProps => ({

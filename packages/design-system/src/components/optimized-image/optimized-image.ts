@@ -6,7 +6,15 @@ import { isBase64Url } from './utils/is-base-64-url';
 export type Laziness = 'lazy' | 'eager';
 export type Priority = 'low' | 'high' | 'auto';
 
+/**
+ * Default blur radius of the CSS filter used on placeholder images
+ * in pixels
+ */
 export const DefaultBlurAmount = 15;
+
+export const DataUrlLengthWarn = 3_500;
+
+export const DataUrlLengthError = 10_000;
 
 export interface OptimizedImageProps {
   /**
@@ -42,20 +50,44 @@ export interface OptimizedImageProps {
    * which is `Base64` string or a `boolean`
    */
   placeholder: string | boolean;
+
+  /**
+   * blur amount for the placeholder image in px
+   * by default it is 15px
+   */
+  blurAmount: number;
 }
 
-const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placeholder: string) => {
+export const validatePlaceholder = (placeholder: string) => {
   if (!isBase64Url(placeholder)) {
-    throw new Error('placeholder should be valid base64 string');
+    throw new Error('placeholder should be valid data url string.');
+  }
+  if (placeholder.length >= DataUrlLengthError) {
+    throw new Error('Data url image is too long.');
+  }
+  if (placeholder.length >= DataUrlLengthWarn) {
+    console.warn('long data url image. consider making it smaller');
   }
 
-  img.stylize('backgroundImage', `url('${placeholder}')`);
-  img.stylize('backgroundPosition', '0, 0');
-  img.stylize('filter', `blur(${DefaultBlurAmount})`);
+  return placeholder;
+};
+
+export const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placeholder: string, blur?: number) => {
+  const image = validatePlaceholder(placeholder);
+
+  const styles: Partial<CSSStyleDeclaration> = {
+    filter: `blur(${blur ?? DefaultBlurAmount}px)`,
+    backgroundImage: `url(${image})`,
+    backgroundPosition: '50%, 50%',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    overflow: 'hidden',
+  };
+
+  img.stylize(styles);
 
   return () => {
-    img.unstylize('backgroundImage');
-    img.unstylize('filter');
+    Object.keys(styles).forEach((style) => img.unstylize(style as keyof CSSStyleDeclaration));
   };
 };
 
@@ -69,6 +101,7 @@ export const OptimizedImage = ({
   width,
   height,
   alt,
+  blurAmount,
   placeholder: placeholderImg,
 }: OptimizedImageProps) => {
   if (width <= 0 || height <= 0) {
@@ -85,7 +118,7 @@ export const OptimizedImage = ({
   });
 
   if (typeof placeholderImg === 'string') {
-    img.on('load', createPlaceholder(img, placeholderImg));
+    img.on('load', createPlaceholder(img, placeholderImg, blurAmount));
   }
 
   return img;
