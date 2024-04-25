@@ -2,6 +2,7 @@ import { BaseComponent } from '@control.ts/min';
 
 import { createImageProps } from './utils/create-image-props';
 import { isBase64Url } from './utils/is-base-64-url';
+import { keys } from './utils/keys';
 
 export type Laziness = 'lazy' | 'eager';
 export type Priority = 'low' | 'high' | 'auto';
@@ -100,7 +101,7 @@ export const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placehol
   img.stylize(styles);
 
   return () => {
-    Object.keys(styles).forEach((style) => img.unstylize(style as keyof CSSStyleDeclaration));
+    keys(styles).forEach((style) => img.unstylize(style));
   };
 };
 
