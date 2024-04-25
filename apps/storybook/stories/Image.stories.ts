@@ -41,4 +41,11 @@ export const Placeholder: Story = {
   },
 };
 
+export const Fill: Story = {
+  args: {
+    fill: true,
+    src: 'https://avatars.githubusercontent.com/u/105741866?s=64&v=4',
+  },
+};
+
 export default meta;

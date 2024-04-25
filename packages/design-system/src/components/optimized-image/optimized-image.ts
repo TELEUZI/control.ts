@@ -3,6 +3,7 @@ import { BaseComponent } from '@control.ts/min';
 import { createImageProps } from './utils/create-image-props';
 import { isBase64Url } from './utils/is-base-64-url';
 import { keys } from './utils/keys';
+import { validateProps } from './utils/validate-props';
 
 export type Laziness = 'lazy' | 'eager';
 export type Priority = 'low' | 'high' | 'auto';
@@ -118,19 +119,17 @@ const fill = (img: BaseComponent<HTMLImageElement>) => {
  * Optmized image component which enforces best practices for loading images.
  * @returns new `OptimizedImage`
  */
-export const OptimizedImage = ({
-  src,
-  laziness = 'lazy',
-  width,
-  height,
-  alt,
-  blurAmount,
-  fill: isFill,
-  placeholder: placeholderImg,
-}: OptimizedImageProps) => {
-  if ((width <= 0 || height <= 0) && !fill) {
-    throw new Error('Image height and width should be at least 1px or fill should be set to true');
-  }
+export const OptimizedImage = (props: OptimizedImageProps) => {
+  const {
+    src,
+    laziness = 'lazy',
+    width,
+    height,
+    alt,
+    blurAmount,
+    fill: isFill,
+    placeholder: placeholderImg,
+  } = validateProps(props);
 
   const img = new BaseComponent<HTMLImageElement & { fetchPriority: Priority }>({
     src,
