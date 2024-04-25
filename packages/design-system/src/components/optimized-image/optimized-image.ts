@@ -1,28 +1,12 @@
 import { BaseComponent } from '@control.ts/min';
 
+import { DefaultBlurAmount } from './constants';
 import { createImageProps } from './utils/create-image-props';
-import { isBase64Url } from './utils/is-base-64-url';
 import { keys } from './utils/keys';
 import { validateProps } from './utils/validate-props';
 
 export type Laziness = 'lazy' | 'eager';
 export type Priority = 'low' | 'high' | 'auto';
-
-/**
- * Default blur radius of the CSS filter used on placeholder images
- * in pixels
- */
-export const DefaultBlurAmount = 15;
-
-/**
- * Warn data url length
- */
-export const DataUrlLengthWarn = 3_500;
-
-/**
- * Maximum dataurl image length
- */
-export const DataUrlLengthError = 10_000;
 
 export interface OptimizedImageProps {
   /**
@@ -72,27 +56,10 @@ export interface OptimizedImageProps {
    */
   fill?: boolean;
 }
-
-export const validatePlaceholder = (placeholder: string) => {
-  if (!isBase64Url(placeholder)) {
-    throw new Error('placeholder should be valid data url string.');
-  }
-  if (placeholder.length >= DataUrlLengthError) {
-    throw new Error('Data url image is too long.');
-  }
-  if (placeholder.length >= DataUrlLengthWarn) {
-    console.warn('long data url image. consider making it smaller');
-  }
-
-  return placeholder;
-};
-
 export const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placeholder: string, blur?: number) => {
-  const image = validatePlaceholder(placeholder);
-
   const styles: Partial<CSSStyleDeclaration> = {
     filter: `blur(${blur ?? DefaultBlurAmount}px)`,
-    backgroundImage: `url(${image})`,
+    backgroundImage: `url(${placeholder})`,
     backgroundPosition: '50%, 50%',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',

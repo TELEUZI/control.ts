@@ -1,4 +1,5 @@
 import type { OptimizedImageProps } from '../optimized-image';
+import { validatePlaceholder } from './validate-placeholder';
 
 export const validateProps = (props: OptimizedImageProps) => {
   if ((props.width <= 0 || props.height <= 0) && !props.fill) {
@@ -6,6 +7,10 @@ export const validateProps = (props: OptimizedImageProps) => {
   }
   if (!props.src) {
     throw new Error('Image should have an src.');
+  }
+
+  if (props.placeholder && typeof props.placeholder === 'string') {
+    validatePlaceholder(props.placeholder);
   }
 
   return props;

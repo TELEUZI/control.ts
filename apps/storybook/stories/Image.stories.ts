@@ -37,7 +37,7 @@ export const Placeholder: Story = {
     height: 500,
     alt: 'image',
     placeholder: base64Img,
-    src: 'http://localhost:3000',
+    src: 'https://wallpaperaccess.com/full/16504.jpg',
   },
 };
 
