@@ -12,12 +12,12 @@ export interface OptimizedImageProps {
   /**
    * Image width
    */
-  width: number;
+  width?: number;
 
   /**
    * Image height
    */
-  height: number;
+  height?: number;
 
   /**
    * Image src
@@ -48,7 +48,7 @@ export interface OptimizedImageProps {
    * blur amount for the placeholder image in pixels
    * by default it is 15px
    */
-  blurAmount: number;
+  blurAmount?: number;
 
   /**
    * Specifies image filling.
@@ -56,6 +56,8 @@ export interface OptimizedImageProps {
    */
   fill?: boolean;
 }
+
+/** @internal */
 export const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placeholder: string, blur?: number) => {
   const styles: Partial<CSSStyleDeclaration> = {
     filter: `blur(${blur ?? DefaultBlurAmount}px)`,
@@ -73,6 +75,7 @@ export const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placehol
   };
 };
 
+/** @internal */
 const fill = (img: BaseComponent<HTMLImageElement>) => {
   img.stylize({
     width: '100%',
@@ -81,6 +84,8 @@ const fill = (img: BaseComponent<HTMLImageElement>) => {
     position: 'absolute',
   });
 };
+
+export type OptimizedImageElement = HTMLImageElement & { fetchPriority: Priority };
 
 /**
  * Optmized image component which enforces best practices for loading images.
@@ -98,11 +103,10 @@ export const OptimizedImage = (props: OptimizedImageProps) => {
     placeholder: placeholderImg,
   } = validateProps(props);
 
-  const img = new BaseComponent<HTMLImageElement & { fetchPriority: Priority }>({
+  const img = new BaseComponent<OptimizedImageElement>({
     src,
     width,
     height,
-    tag: 'img',
     alt,
     ...createImageProps(laziness),
   });
