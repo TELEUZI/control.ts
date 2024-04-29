@@ -48,7 +48,7 @@ export interface OptimizedImageProps {
    * blur amount for the placeholder image in pixels
    * by default it is 15px
    */
-  blurAmount?: number;
+  blur?: number;
 
   /**
    * Specifies image filling.
@@ -98,7 +98,7 @@ export const OptimizedImage = (props: OptimizedImageProps) => {
     width,
     height,
     alt,
-    blurAmount,
+    blur,
     fill: isFill,
     placeholder: placeholderImg,
   } = validateProps(props);
@@ -112,7 +112,7 @@ export const OptimizedImage = (props: OptimizedImageProps) => {
   });
 
   if (typeof placeholderImg === 'string') {
-    img.on('load', createPlaceholder(img, placeholderImg, blurAmount));
+    img.once('load', createPlaceholder(img, placeholderImg, blur));
   }
 
   if (isFill) {
