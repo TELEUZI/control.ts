@@ -19,7 +19,7 @@ const meta: Meta<OptimizedImageProps> = {
     },
     alt: { control: 'string', description: 'specifies image alt attribute' },
     placeholder: { control: 'text', description: 'specifies image alt' },
-    blurAmount: {
+    blur: {
       control: 'number',
       description: 'specifies placeholder image blur amount, if set to zero than no blur effect is applied',
     },

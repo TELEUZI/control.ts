@@ -2,6 +2,7 @@ import { BaseComponent } from '@control.ts/min';
 
 import { DefaultBlurAmount } from './constants';
 import { createImageProps } from './utils/create-image-props';
+import { assertNoDistortion } from './utils/distortion';
 import { keys } from './utils/keys';
 import { validateProps } from './utils/validate-props';
 
@@ -85,23 +86,14 @@ const fill = (img: BaseComponent<HTMLImageElement>) => {
   });
 };
 
-export type OptimizedImageElement = HTMLImageElement & { fetchPriority: Priority };
+export type OptimizedImageElement = HTMLImageElement & { fetchpriority: Priority };
 
 /**
  * Optmized image component which enforces best practices for loading images.
  * @returns new `OptimizedImage`
  */
 export const OptimizedImage = (props: OptimizedImageProps) => {
-  const {
-    src,
-    laziness = 'lazy',
-    width,
-    height,
-    alt,
-    blur,
-    fill: isFill,
-    placeholder: placeholderImg,
-  } = validateProps(props);
+  const { src, laziness = 'lazy', width, height, alt, blur, fill: isFill, placeholder } = validateProps(props);
 
   const img = new BaseComponent<OptimizedImageElement>({
     src,
@@ -111,12 +103,14 @@ export const OptimizedImage = (props: OptimizedImageProps) => {
     ...createImageProps(laziness),
   });
 
-  if (typeof placeholderImg === 'string') {
-    img.once('load', createPlaceholder(img, placeholderImg, blur));
+  if (placeholder) {
+    img.once('load', createPlaceholder(img, placeholder as string, blur));
   }
 
   if (isFill) {
     fill(img);
+  } else {
+    assertNoDistortion(img, width!, height!);
   }
 
   return img;
