@@ -1,7 +1,7 @@
 import type { BaseComponent } from '@control.ts/min';
 
 import type { OptimizedImageElement } from '../optimized-image';
-import { flatRatio, type Metrics, wrap } from './metrics';
+import { findClosestToRatio, flatRatio, type Metrics, wrap } from './metrics';
 import { objectFromEntries } from './object-from-entries';
 
 const sides = ['left', 'right', 'top', 'bottom'] as const;
@@ -24,28 +24,6 @@ export const getComputedMetrics = (computed: CSSStyleDeclaration): Metrics => {
   }
 
   return wrap(width, height);
-};
-
-const findClosestToRatio = (width: number, height: number, desiredRatio: number) => {
-  const currentRatio = flatRatio(width, height);
-
-  if (currentRatio === desiredRatio) {
-    return wrap(width, height);
-  }
-
-  const diff = Math.abs(desiredRatio - currentRatio);
-
-  if (currentRatio < desiredRatio) {
-    const newWidth = width + diff;
-    const newHeight = newWidth / desiredRatio;
-
-    return wrap(newWidth, newHeight);
-  }
-
-  const newHeight = height + diff;
-  const newWidth = newHeight * desiredRatio;
-
-  return wrap(newWidth, newHeight);
 };
 
 export const assertNoDistortion = (img: BaseComponent<OptimizedImageElement>, width: number, height: number) => {

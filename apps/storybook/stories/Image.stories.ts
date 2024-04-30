@@ -44,7 +44,7 @@ const base64Img = `data:image/gif;base64,R0lGODdh9AH0AeMAAMzMzJaWlr6+vre3t8XFxaO
 export const Placeholder = {
   args: {
     width: 501,
-    height: 334,
+    height: 500,
     alt: 'image',
     placeholder: base64Img,
     src: 'https://wallpaperaccess.com/full/16504.jpg',
