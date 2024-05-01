@@ -56,6 +56,13 @@ export interface OptimizedImageProps {
    * if set to true, height and width are no longer required
    */
   fill?: boolean;
+
+  /**
+   * Specifies image srcset
+   */
+  srcset?: string;
+
+  sizes?: string;
 }
 
 const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placeholder: string, blur?: number) => {
@@ -97,15 +104,29 @@ export type OptimizedImageElement = HTMLImageElement & { fetchpriority: Priority
  * @returns new `OptimizedImage`
  */
 export const OptimizedImage = (props: OptimizedImageProps) => {
-  const { src, laziness = 'lazy', width, height, alt, blur, fill: isFill, placeholder } = validateProps(props);
+  const {
+    src,
+    laziness = 'lazy',
+    width,
+    height,
+    alt,
+    blur,
+    fill: isFill,
+    placeholder,
+    srcset,
+    sizes,
+  } = validateProps(props);
 
   const img = new BaseComponent<OptimizedImageElement>({
     src,
     width,
     height,
     alt,
+    sizes,
     ...createImageProps(laziness),
   });
+
+  srcset && (img.node.srcset = srcset);
 
   if (placeholder) {
     img.once('load', createPlaceholder(img, placeholder as string, blur));

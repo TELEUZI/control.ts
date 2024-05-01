@@ -58,4 +58,15 @@ export const Fill = {
   },
 };
 
+export const Srcset = {
+  args: {
+    src: 'https://wallpaperaccess.com/full/16504.jpg',
+    srcset:
+      'https://wallpaperaccess.com/full/16504.jpg 1300w, https://avatars.githubusercontent.com/u/105741866?s=64&v=4, 1400w',
+    sizes: '(max-width: 1300px): 1300px',
+    alt: 'srcset test',
+    fill: true,
+  },
+};
+
 export default meta;

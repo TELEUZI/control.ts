@@ -54,9 +54,9 @@ export const assertNoDistortion = (img: BaseComponent<OptimizedImageElement>, wi
 
       console.warn(
         `(${img.node.src}) The aspect ratio of the image does not match the aspect ratio indicated by height and width attributes.` +
-          formatSupplied(width, height, suppliedRatio),
-        formatIntrinsic(intrinsicWidth, intrinsicHeight, intrinsicAspectRatio),
-        `\nConsider adjusting width and height to ${closest.width} x ${closest.height}`,
+          formatSupplied(width, height, suppliedRatio) +
+          formatIntrinsic(intrinsicWidth, intrinsicHeight, intrinsicAspectRatio) +
+          `\nConsider adjusting width and height to ${closest.width} x ${closest.height}`,
       );
       return;
     }
