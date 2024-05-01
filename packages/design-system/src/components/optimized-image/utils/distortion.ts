@@ -62,7 +62,7 @@ export const assertNoDistortion = (img: BaseComponent<OptimizedImageElement>, wi
     }
 
     if (stylingDistortion) {
-      const closest = findClosestToRatio(width, height, intrinsicHeight);
+      const closest = findClosestToRatio(width, height, intrinsicAspectRatio);
 
       console.warn(
         `${img.node.src} The aspect ratio of the rendered image does not match the image's intrinsic aspect ratio.` +
