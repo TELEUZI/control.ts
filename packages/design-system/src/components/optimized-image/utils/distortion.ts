@@ -34,8 +34,6 @@ const formatSupplied = formatDimensions('Supplied');
 const formatRendered = formatDimensions('Rendered');
 
 export const assertNoDistortion = (img: BaseComponent<OptimizedImageElement>, width: number, height: number) => {
-  img.stylize('width', '10px');
-
   img.once('load', () => {
     const computed = window.getComputedStyle(img.node);
     const metrics = getComputedMetrics(computed);

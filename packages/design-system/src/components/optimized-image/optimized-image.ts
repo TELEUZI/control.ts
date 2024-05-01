@@ -90,6 +90,7 @@ const fill = (img: BaseComponent<HTMLImageElement>) => {
  */
 export type OptimizedImageElement = HTMLImageElement & { fetchpriority: Priority };
 
+// TODO: implement srcset.
 /**
  * Optmized image component which enforces best practices for loading images.
  * Warns if image is distroted and shows how to fix it.
