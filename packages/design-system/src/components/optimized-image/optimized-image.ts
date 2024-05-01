@@ -27,10 +27,10 @@ export interface OptimizedImageProps {
 
   /**
    * Specifies imagine laziness.
-   * - `lazy` default browser laziness
-   * - `eager` non lazy image
+   * - `lazy` image will load only if visible.
+   * - `eager` non lazy image.
    *
-   * lazy by default
+   * `lazy` is the default value.
    */
   laziness?: Laziness;
 
@@ -43,7 +43,7 @@ export interface OptimizedImageProps {
    * Specifies image placeholder which is by default blurred by `15px`
    * which is `Base64` string or a `boolean`
    */
-  placeholder: string | boolean;
+  placeholder?: string | boolean;
 
   /**
    * blur amount for the placeholder image in pixels
@@ -58,8 +58,7 @@ export interface OptimizedImageProps {
   fill?: boolean;
 }
 
-/** @internal */
-export const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placeholder: string, blur?: number) => {
+const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placeholder: string, blur?: number) => {
   const styles: Partial<CSSStyleDeclaration> = {
     filter: `blur(${blur ?? DefaultBlurAmount}px)`,
     backgroundImage: `url(${placeholder})`,
@@ -76,7 +75,6 @@ export const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placehol
   };
 };
 
-/** @internal */
 const fill = (img: BaseComponent<HTMLImageElement>) => {
   img.stylize({
     width: '100%',
@@ -86,10 +84,15 @@ const fill = (img: BaseComponent<HTMLImageElement>) => {
   });
 };
 
+/**
+ * HTMLImageElement that has fetchpriority because typescript does not include
+ * fetchpriority in standart HTMLImageElement for some reason
+ */
 export type OptimizedImageElement = HTMLImageElement & { fetchpriority: Priority };
 
 /**
  * Optmized image component which enforces best practices for loading images.
+ * Warns if image is distroted and shows how to fix it.
  * @returns new `OptimizedImage`
  */
 export const OptimizedImage = (props: OptimizedImageProps) => {
