@@ -1,6 +1,7 @@
 import { BaseComponent } from '@control.ts/min';
 
 import { DefaultBlurAmount } from './constants';
+import { generateSrcset, type Loader } from './generate-srcset';
 import { createImageProps } from './utils/create-image-props';
 import { assertNoDistortion } from './utils/distortion';
 import { keys } from './utils/keys';
@@ -63,6 +64,8 @@ export interface OptimizedImageProps {
   srcset?: string;
 
   sizes?: string;
+
+  loader: Loader;
 }
 
 const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placeholder: string, blur?: number) => {
@@ -127,6 +130,10 @@ export const OptimizedImage = (props: OptimizedImageProps) => {
   });
 
   srcset && (img.node.srcset = srcset);
+
+  if (sizes) {
+    img.node.srcset = generateSrcset(src, sizes, props.loader);
+  }
 
   if (placeholder) {
     img.once('load', createPlaceholder(img, placeholder as string, blur));
