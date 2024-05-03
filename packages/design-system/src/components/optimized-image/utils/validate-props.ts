@@ -1,6 +1,7 @@
 import type { OptimizedImageProps } from '../optimized-image';
 import { validateMetrics } from './validate-metrics';
 import { validatePlaceholder } from './validate-placeholder';
+import { validateSrcset } from './validate-srcset';
 
 export const validateProps = (props: OptimizedImageProps) => {
   if (!props.fill) {
@@ -9,6 +10,10 @@ export const validateProps = (props: OptimizedImageProps) => {
 
   if (props.placeholder && typeof props.placeholder === 'string') {
     validatePlaceholder(props.placeholder);
+  }
+
+  if (props.srcset) {
+    validateSrcset(props.srcset);
   }
 
   return props;

@@ -9,7 +9,7 @@ const defaultLoader = (src: string, size: string) => {
   return src.slice(0, index) + `-${size}` + src.slice(index);
 };
 
-const sizeToSrcset = (src: string, loader?: Loader) => (size: string) => {
+const createSizeToSrcset = (src: string, loader?: Loader) => (size: string) => {
   const trimmed = size.trim();
 
   return `${loader ? loader(src, trimmed) : defaultLoader(src, trimmed)} ${trimmed}`;
@@ -17,5 +17,5 @@ const sizeToSrcset = (src: string, loader?: Loader) => (size: string) => {
 
 /** @internal */
 export const generateSrcset = (src: string, sizes: string, loader?: Loader) => {
-  return sizes.split(',').filter(isNotEmpty).map(sizeToSrcset(src, loader)).join(', ');
+  return sizes.split(',').filter(isNotEmpty).map(createSizeToSrcset(src, loader)).join(', ');
 };

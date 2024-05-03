@@ -2,10 +2,13 @@ import { OptimizedImage, type OptimizedImageProps } from '@control.ts/design-sys
 import type { Meta } from '@storybook/html';
 
 const meta: Meta<OptimizedImageProps> = {
-  title: 'Example/OptimizedImage',
+  title: 'example/OptimizedImage',
   tags: ['autodocs'],
   render: (args) => {
     const image = OptimizedImage(args);
+    window.onresize = () => {
+      console.log(image.node.currentSrc);
+    };
     return image.node;
   },
   argTypes: {
@@ -13,8 +16,8 @@ const meta: Meta<OptimizedImageProps> = {
     width: { control: 'number', description: 'specifies image width' },
     height: { control: 'number', description: 'specifies image height' },
     laziness: {
-      control: ['lazy', 'intersection', 'none'],
-      default: 'lazy',
+      control: { type: 'radio' },
+      options: ['lazy', 'intersection', 'none'],
       description: 'specifies how image should load',
     },
     alt: { control: 'string', description: 'specifies image alt attribute' },
@@ -61,8 +64,8 @@ export const Fill = {
 export const Srcset = {
   args: {
     src: 'duck.jpeg',
-    loader: (src: string) => src,
-    sizes: '1300w, 1500w, 1500w',
+    srcset: '1300w, 1500w',
+    sizes: '(max-width: 1300px): 1300w, (max-width): 1500w',
     alt: 'srcset test',
     fill: true,
   },

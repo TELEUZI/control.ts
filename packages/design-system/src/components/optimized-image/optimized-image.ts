@@ -10,6 +10,10 @@ import { validateProps } from './utils/validate-props';
 export type Laziness = 'lazy' | 'eager';
 export type Priority = 'low' | 'high' | 'auto';
 
+/**
+ * Optimzied image props
+ * @see {@link OptimizedImage}
+ */
 export interface OptimizedImageProps {
   /**
    * Image width
@@ -47,8 +51,8 @@ export interface OptimizedImageProps {
   placeholder?: string | boolean;
 
   /**
-   * blur amount for the placeholder image in pixels
-   * by default it is 15px
+   * blur amount for the placeholder image specified pixels
+   * default value is 15.
    */
   blur?: number;
 
@@ -59,12 +63,25 @@ export interface OptimizedImageProps {
   fill?: boolean;
 
   /**
-   * Specifies image srcset
+   * Specifies image srcset, if only sizes passed in then it converts it to
+   * valid srcset and transforms every size using `loader` if provided.
+   *
+   * if no loader was passed then default loader function will be used that
+   * converts srcs to `[baseImageSrcWithoutExt]`-`[size]`.`[ext]`
    */
   srcset?: string;
 
+  /** Specifies sizes attribute for the image.
+   *
+   * @see MDN reference {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/sizes}
+   */
   sizes?: string;
 
+  /**
+   * Function to rewrite srcsets.
+   *
+   * Default overwriter function converts src and size to `[baseImageSrcWithoutExt]`-`[size]`.`[ext]` string.
+   */
   loader: Loader;
 }
 
@@ -104,6 +121,7 @@ export type OptimizedImageElement = HTMLImageElement & { fetchpriority: Priority
 /**
  * Optmized image component which enforces best practices for loading images.
  * Warns if image is distroted and shows how to fix it.
+ * @see {@link OptimizedImageProps}
  * @returns new `OptimizedImage`
  */
 export const OptimizedImage = (props: OptimizedImageProps) => {
@@ -129,10 +147,11 @@ export const OptimizedImage = (props: OptimizedImageProps) => {
     ...createImageProps(laziness),
   });
 
-  srcset && (img.node.srcset = srcset);
-
+  if (srcset) {
+    img.node.srcset = generateSrcset(src, srcset);
+  }
   if (sizes) {
-    img.node.srcset = generateSrcset(src, sizes, props.loader);
+    img.node.sizes = sizes;
   }
 
   if (placeholder) {
