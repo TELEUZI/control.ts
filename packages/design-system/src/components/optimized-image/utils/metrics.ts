@@ -1,14 +1,19 @@
+/** @internal */
 export interface Metrics {
   width: number;
   height: number;
 }
 
+/** @internal */
 export const wrap = (width: number, height: number): Metrics => ({ width, height });
 
+/** @internal */
 export const ratio = (metrics: Metrics) => metrics.width / metrics.height;
 
+/** @internal */
 export const flatRatio = (width: number, height: number) => width / height;
 
+/** @internal */
 export const findClosestToRatio = (width: number, height: number, desiredRatio: number) => {
   const currentRatio = flatRatio(width, height);
 

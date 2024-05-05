@@ -7,6 +7,7 @@ interface LoadingProps {
   tag: 'img';
 }
 
+/** @internal */
 export const createImageProps = (laziness: Laziness): LoadingProps => ({
   fetchpriority: getPriorityByLaziness(laziness),
   loading: laziness,

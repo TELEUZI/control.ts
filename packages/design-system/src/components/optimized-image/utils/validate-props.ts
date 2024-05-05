@@ -3,6 +3,7 @@ import { validateMetrics } from './validate-metrics';
 import { validatePlaceholder } from './validate-placeholder';
 import { validateSrcset } from './validate-srcset';
 
+/** @internal */
 export const validateProps = (props: OptimizedImageProps) => {
   if (!props.fill) {
     validateMetrics(props);

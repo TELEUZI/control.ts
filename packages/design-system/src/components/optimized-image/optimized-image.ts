@@ -3,7 +3,6 @@ import { BaseComponent } from '@control.ts/min';
 import { DefaultBlurAmount } from './constants';
 import { generateSrcset, type Loader } from './generate-srcset';
 import { createImageProps } from './utils/create-image-props';
-import { assertNoDistortion } from './utils/distortion';
 import { keys } from './utils/keys';
 import { validateProps } from './utils/validate-props';
 
@@ -46,9 +45,9 @@ export interface OptimizedImageProps {
 
   /**
    * Specifies image placeholder which is by default blurred by `15px`
-   * which is `Base64` string or a `boolean`
+   * which is `Base64` string
    */
-  placeholder?: string | boolean;
+  placeholder?: string;
 
   /**
    * blur amount for the placeholder image specified pixels
@@ -63,11 +62,12 @@ export interface OptimizedImageProps {
   fill?: boolean;
 
   /**
-   * Specifies image srcset, if only sizes passed in then it converts it to
-   * valid srcset and transforms every size using `loader` if provided.
+   * Specifies the `srcset` attribute for an image. If only sizes are provided,
+   * this function converts them into a valid `srcset` format and applies any specified
+   * loader to transform each src-size pair.
    *
-   * if no loader was passed then default loader function will be used that
-   * converts srcs to `[baseImageSrcWithoutExt]`-`[size]`.`[ext]`
+   * If no loader is provided, a default loader function will be used. This function
+   * converts image sources to a format like `[baseImageSrcWithoutExt]-[size].[ext]`.
    */
   srcset?: string;
 
@@ -78,11 +78,12 @@ export interface OptimizedImageProps {
   sizes?: string;
 
   /**
-   * Function to rewrite srcsets.
+   * Function used to rewrite `srcset` attributes.
    *
-   * Default overwriter function converts src and size to `[baseImageSrcWithoutExt]`-`[size]`.`[ext]` string.
+   * The default loader function converts the source and size to a string format
+   * like `[baseImageSrcWithoutExt]-[size].[ext]`.
    */
-  loader: Loader;
+  loader?: Loader;
 }
 
 const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placeholder: string, blur?: number) => {
@@ -113,11 +114,17 @@ const fill = (img: BaseComponent<HTMLImageElement>) => {
 
 /**
  * HTMLImageElement that has fetchpriority because typescript does not include
- * fetchpriority in standart HTMLImageElement for some reason
+ * fetchpriority in standart HTMLImageElement
  */
 export type OptimizedImageElement = HTMLImageElement & { fetchpriority: Priority };
 
-// TODO: implement srcset.
+/** @internal */
+export const lazyAssertNoDistortion = (img: BaseComponent<OptimizedImageElement>, width: number, height: number) => {
+  img.once('load', () =>
+    import('./utils/distortion.js').then((module) => module.assertNoDistortion(img, width, height)),
+  );
+};
+
 /**
  * Optmized image component which enforces best practices for loading images.
  * Warns if image is distroted and shows how to fix it.
@@ -150,18 +157,19 @@ export const OptimizedImage = (props: OptimizedImageProps) => {
   if (srcset) {
     img.node.srcset = generateSrcset(src, srcset);
   }
+
   if (sizes) {
     img.node.sizes = sizes;
   }
 
   if (placeholder) {
-    img.once('load', createPlaceholder(img, placeholder as string, blur));
+    img.once('load', createPlaceholder(img, placeholder, blur));
   }
 
   if (isFill) {
     fill(img);
   } else {
-    assertNoDistortion(img, width!, height!);
+    lazyAssertNoDistortion(img, width!, height!);
   }
 
   return img;

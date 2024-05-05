@@ -65,7 +65,7 @@ export const Srcset = {
   args: {
     src: 'duck.jpeg',
     srcset: '1300w, 1500w',
-    sizes: '(max-width: 1300px): 1300w, (max-width): 1500w',
+    sizes: '(max-width: 1300px): 1300w, (max-width: 1500px): 1500w',
     alt: 'srcset test',
     fill: true,
   },

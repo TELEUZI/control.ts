@@ -6,4 +6,5 @@ const priority: Record<string, Priority> = {
   eager: 'high',
 };
 
+/** @internal */
 export const getPriorityByLaziness = (laziness: Laziness) => priority[laziness] ?? 'low';

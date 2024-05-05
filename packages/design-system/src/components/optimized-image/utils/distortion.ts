@@ -34,42 +34,40 @@ const formatSupplied = formatDimensions('Supplied');
 const formatRendered = formatDimensions('Rendered');
 
 export const assertNoDistortion = (img: BaseComponent<OptimizedImageElement>, width: number, height: number) => {
-  img.once('load', () => {
-    const computed = window.getComputedStyle(img.node);
-    const metrics = getComputedMetrics(computed);
+  const computed = window.getComputedStyle(img.node);
+  const metrics = getComputedMetrics(computed);
 
-    const renderedRatio = ratio(metrics);
-    const nonZeroRenderedDimensions = metrics.width !== 0 && metrics.height !== 0;
-    const intrinsicWidth = img.node.naturalWidth;
-    const intrinsicHeight = img.node.naturalHeight;
-    const intrinsicAspectRatio = flatRatio(intrinsicWidth, intrinsicHeight);
+  const renderedRatio = ratio(metrics);
+  const nonZeroRenderedDimensions = metrics.width !== 0 && metrics.height !== 0;
+  const intrinsicWidth = img.node.naturalWidth;
+  const intrinsicHeight = img.node.naturalHeight;
+  const intrinsicAspectRatio = flatRatio(intrinsicWidth, intrinsicHeight);
 
-    const suppliedRatio = flatRatio(width, height);
+  const suppliedRatio = flatRatio(width, height);
 
-    const inaccurateDimensions = Math.abs(suppliedRatio - intrinsicAspectRatio) > 0.1;
-    const stylingDistortion = nonZeroRenderedDimensions && Math.abs(intrinsicAspectRatio - renderedRatio) > 0.1;
+  const inaccurateDimensions = Math.abs(suppliedRatio - intrinsicAspectRatio) > 0.1;
+  const stylingDistortion = nonZeroRenderedDimensions && Math.abs(intrinsicAspectRatio - renderedRatio) > 0.1;
 
-    if (inaccurateDimensions) {
-      const closest = findClosestToRatio(width, height, intrinsicAspectRatio);
+  if (inaccurateDimensions) {
+    const closest = findClosestToRatio(width, height, intrinsicAspectRatio);
 
-      console.warn(
-        `(${img.node.src}) The aspect ratio of the image does not match the aspect ratio indicated by height and width attributes.` +
-          formatSupplied(width, height, suppliedRatio) +
-          formatIntrinsic(intrinsicWidth, intrinsicHeight, intrinsicAspectRatio) +
-          `\nConsider adjusting width and height to ${closest.width} x ${closest.height}`,
-      );
-      return;
-    }
+    console.warn(
+      `(${img.node.src}) The aspect ratio of the image does not match the aspect ratio indicated by height and width attributes.` +
+        formatSupplied(width, height, suppliedRatio) +
+        formatIntrinsic(intrinsicWidth, intrinsicHeight, intrinsicAspectRatio) +
+        `\nConsider adjusting width and height to ${closest.width} x ${closest.height}`,
+    );
+    return;
+  }
 
-    if (stylingDistortion) {
-      const closest = findClosestToRatio(width, height, intrinsicAspectRatio);
+  if (stylingDistortion) {
+    const closest = findClosestToRatio(width, height, intrinsicAspectRatio);
 
-      console.warn(
-        `${img.node.src} The aspect ratio of the rendered image does not match the image's intrinsic aspect ratio.` +
-          formatIntrinsic(intrinsicWidth, intrinsicHeight, intrinsicAspectRatio) +
-          formatRendered(metrics.width, metrics.height, renderedRatio) +
-          `\nConsider removing width and height styles, or adjusting them to width: auto; height: auto or width: ${closest.width}px; height: ${closest.height}px.`,
-      );
-    }
-  });
+    console.warn(
+      `${img.node.src} The aspect ratio of the rendered image does not match the image's intrinsic aspect ratio.` +
+        formatIntrinsic(intrinsicWidth, intrinsicHeight, intrinsicAspectRatio) +
+        formatRendered(metrics.width, metrics.height, renderedRatio) +
+        `\nConsider removing width and height styles, or adjusting them to width: auto; height: auto or width: ${closest.width}px; height: ${closest.height}px.`,
+    );
+  }
 };

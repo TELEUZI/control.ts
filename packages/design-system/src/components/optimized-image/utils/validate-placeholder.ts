@@ -1,6 +1,7 @@
 import { DataUrlLengthError, DataUrlLengthWarn } from '../constants';
 import { isBase64Url } from './is-base-64-url';
 
+/** @internal */
 export const validatePlaceholder = (placeholder: string) => {
   if (!isBase64Url(placeholder)) {
     throw new Error('placeholder should be valid data url string.');

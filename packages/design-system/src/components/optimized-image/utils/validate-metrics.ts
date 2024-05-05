@@ -1,5 +1,6 @@
 import type { OptimizedImageProps } from '../optimized-image';
 
+/** @internal */
 export const validateMetrics = (props: OptimizedImageProps) => {
   if (!props.width || !props.height) {
     throw new Error('width and height should be provided when fill is false.');
