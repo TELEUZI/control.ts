@@ -21,7 +21,7 @@ const meta: Meta<OptimizedImageProps> = {
     height: { control: 'number', description: 'specifies image height' },
     laziness: {
       control: { type: 'radio' },
-      options: ['lazy', 'intersection', 'none'],
+      options: ['lazy', 'none'],
       description: 'specifies how image should load',
     },
     alt: { control: 'string', description: 'specifies image alt attribute', required: true },
@@ -75,12 +75,14 @@ export const Srcset: Story = {
   },
 };
 
-export const Zooming: Story = {
+export const Density: Story = {
   args: {
-    fill: true,
     src: 'duck.jpeg',
-    srcset: '0.6x, 0.8x',
-    alt: 'zooming srcset',
+    // width: 500,
+    // height: 500,
+    srcset: '2x',
+    sizes: '(max-width: 600px): 2x',
+    alt: 'Density srcset',
   },
 };
 
