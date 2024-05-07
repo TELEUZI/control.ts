@@ -1,21 +1,30 @@
+import type { Loader } from './types/loader';
+import { widthRegexp } from './utils/validate-srcset';
+
 const isNotEmpty = (string: string) => string.trim() !== '';
 
-/** @internal */
-export type Loader = (src: string, size: string) => string;
+const defaultLoader: Loader = (config) => {
+  const index = config.src.lastIndexOf('.');
 
-const defaultLoader = (src: string, size: string) => {
-  const index = src.lastIndexOf('.');
-
-  return src.slice(0, index) + `-${size}` + src.slice(index);
+  return config.src.slice(0, index) + `-${config.width}` + config.src.slice(index);
 };
 
-const createSizeToSrcset = (src: string, loader?: Loader) => (size: string) => {
-  const trimmed = size.trim();
+const createSizeToSrcset = (src: string, imageWidth?: number, loader?: Loader) => {
+  const isWidthSrcset = widthRegexp.test(src);
 
-  return `${loader ? loader(src, trimmed) : defaultLoader(src, trimmed)} ${trimmed}`;
+  return (size: string) => {
+    const width = size.trim();
+    const widthAsNumber = isWidthSrcset ? parseFloat(size) : parseFloat(size) * imageWidth!;
+
+    return `${loader ? loader({ src, width, widthAsNumber }) : defaultLoader({ src, width, widthAsNumber })} ${width}`;
+  };
 };
 
 /** @internal */
-export const generateSrcset = (src: string, sizes: string, loader?: Loader) => {
-  return sizes.split(',').filter(isNotEmpty).map(createSizeToSrcset(src, loader)).join(', ');
+export const generateSrcset = (src: string, sizes: string, width?: number, loader?: Loader) => {
+  return sizes
+    .split(',')
+    .filter(isNotEmpty)
+    .map(createSizeToSrcset(src, width, loader))
+    .join(', ');
 };

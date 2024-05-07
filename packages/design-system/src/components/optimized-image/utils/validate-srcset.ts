@@ -1,5 +1,8 @@
-const widthRegexp = /^((\s*\d+w\s*(,|$)){1,})$/;
-const densityRegexp = /^((\s*\d+(\.\d+)?x\s*(,|$)){1,})$/;
+/** @internal */
+export const widthRegexp = /^((\s*\d+w\s*(,|$)){1,})$/;
+
+/** @internal */
+export const densityRegexp = /^((\s*\d+(\.\d+)?x\s*(,|$)){1,})$/;
 
 /** @internal */
 export const validateSrcset = (srcset: string | null | undefined) => {
@@ -13,6 +16,6 @@ export const validateSrcset = (srcset: string | null | undefined) => {
   const isValidSrcset = isValidWidth || isValidDensity;
 
   if (!isValidSrcset) {
-    throw new Error(`invalid srcset`);
+    throw new Error(`Invalid srcset`);
   }
 };

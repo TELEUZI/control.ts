@@ -1,7 +1,8 @@
 import { BaseComponent } from '@control.ts/min';
 
 import { DefaultBlurAmount } from './constants';
-import { generateSrcset, type Loader } from './generate-srcset';
+import { generateSrcset } from './generate-srcset';
+import type { Loader } from './types/loader';
 import { createImageProps } from './utils/create-image-props';
 import { keys } from './utils/keys';
 import { validateProps } from './utils/validate-props';
@@ -15,7 +16,7 @@ export type Priority = 'low' | 'high' | 'auto';
  */
 export interface OptimizedImageProps {
   /**
-   * Image width
+   * Specifies Image width
    */
   width?: number;
 
