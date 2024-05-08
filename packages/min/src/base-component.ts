@@ -53,8 +53,8 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
     Object.assign(this._node.style, style);
   }
 
-  public unstylize<K extends keyof CSSStyleDeclaration>(key: K) {
-    this._node.style.removeProperty(key.toString());
+  public unstylize<K extends keyof CSSStyleDeclaration>(...keys: K[]) {
+    keys.forEach((key) => this._node.style.removeProperty(key.toString()));
   }
 }
 

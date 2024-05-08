@@ -104,7 +104,7 @@ const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placeholder: st
   img.stylize(styles);
 
   return () => {
-    keys(styles).forEach((style) => img.unstylize(style));
+    img.unstylize(...keys(styles));
   };
 };
 
