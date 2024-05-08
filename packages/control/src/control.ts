@@ -81,12 +81,7 @@ export abstract class Control<T extends HTMLElement = HTMLElement> {
   }
 
   public once(event: string, callback: (e: Event) => void) {
-    const handler = (e: Event) => {
-      callback(e);
-      this._node.removeEventListener(event, handler);
-    };
-
-    this._node.addEventListener(event, handler);
+    this._node.addEventListener(event, callback, { once: true });
   }
 
   public off(event: string, callback: (e: Event) => void): void {
