@@ -5,10 +5,13 @@ import { generateSrcset } from './generate-srcset';
 import type { Loader } from './types/loader';
 import { createImageProps } from './utils/create-image-props';
 import { keys } from './utils/keys';
+import { validateFn } from './utils/validate-placeholder';
 import { validateProps } from './utils/validate-props';
 
 export type Laziness = 'lazy' | 'eager';
 export type Priority = 'low' | 'high' | 'auto';
+
+// raji-nazi-4mo
 
 /**
  * Optimzied image props
@@ -17,16 +20,18 @@ export type Priority = 'low' | 'high' | 'auto';
 export interface OptimizedImageProps {
   /**
    * Specifies Image width
+   * **required** if `fill` is true, then it is not required
    */
   width?: number;
 
   /**
-   * Image height
+   * Specifies Image height
+   * **required** if `fill` is true, then it is not required
    */
   height?: number;
 
   /**
-   * Image src
+   * Specifies image src.
    */
   src: string;
 
@@ -48,11 +53,11 @@ export interface OptimizedImageProps {
    * Specifies image placeholder which is by default blurred by `15px`
    * which is `Base64` string
    */
-  placeholder?: string;
+  placeholder?: string | true;
 
   /**
    * blur amount for the placeholder image specified pixels
-   * default value is 15.
+   * default value is 15px.
    */
   blur?: number;
 
@@ -72,9 +77,8 @@ export interface OptimizedImageProps {
    */
   srcset?: string;
 
-  /** Specifies sizes attribute for the image.
-   *
-   * @see MDN reference {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/sizes}
+  /**
+   * Specifies sizes attribute for the image.
    */
   sizes?: string;
 
@@ -126,9 +130,16 @@ export const lazyAssertNoDistortion = (img: BaseComponent<OptimizedImageElement>
   );
 };
 
+const getPlaceholderUrl = (props: OptimizedImageProps) => {
+  return props.placeholder === true
+    ? validateFn(props.loader!, { src: props.src, isPlaceholder: true, widthAsNumber: props.width })
+    : props.placeholder!;
+};
+
 /**
  * Optmized image component which enforces best practices for loading images.
  * Warns if image is distroted and shows how to fix it.
+ * Make sure to add `<link rel="preload" as="image" href="<image src here">` tag in head.
  * @see {@link OptimizedImageProps}
  * @returns new `OptimizedImage`
  */
@@ -156,15 +167,11 @@ export const OptimizedImage = (props: OptimizedImageProps) => {
   });
 
   if (srcset) {
-    img.node.srcset = generateSrcset(src, srcset);
-  }
-
-  if (sizes) {
-    img.node.sizes = sizes;
+    img.node.srcset = generateSrcset(src, srcset, width!);
   }
 
   if (placeholder) {
-    img.once('load', createPlaceholder(img, placeholder, blur));
+    img.once('load', createPlaceholder(img, getPlaceholderUrl(props), blur));
   }
 
   if (isFill) {

@@ -9,19 +9,19 @@ const defaultLoader: Loader = (config) => {
   return config.src.slice(0, index) + `-${config.width}` + config.src.slice(index);
 };
 
-const createSizeToSrcset = (src: string, imageWidth?: number, loader?: Loader) => {
+const createSizeToSrcset = (src: string, imageWidth: number, loader?: Loader) => {
   const isWidthSrcset = widthRegexp.test(src);
 
   return (size: string) => {
     const width = size.trim();
-    const widthAsNumber = isWidthSrcset ? parseFloat(size) : parseFloat(size) * imageWidth!;
+    const widthAsNumber = isWidthSrcset ? parseFloat(size) : parseFloat(size) * imageWidth;
 
     return `${loader ? loader({ src, width, widthAsNumber }) : defaultLoader({ src, width, widthAsNumber })} ${width}`;
   };
 };
 
 /** @internal */
-export const generateSrcset = (src: string, sizes: string, width?: number, loader?: Loader) => {
+export const generateSrcset = (src: string, sizes: string, width: number, loader?: Loader) => {
   return sizes
     .split(',')
     .filter(isNotEmpty)

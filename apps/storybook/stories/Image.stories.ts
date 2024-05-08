@@ -16,16 +16,20 @@ const meta: Meta<OptimizedImageProps> = {
     return image.node;
   },
   argTypes: {
-    src: { control: 'string', description: 'specifies image src', require: true },
+    src: { control: 'text', description: 'specifies image src' },
     width: { control: 'number', description: 'specifies image width' },
     height: { control: 'number', description: 'specifies image height' },
     laziness: {
       control: { type: 'radio' },
-      options: ['lazy', 'none'],
+      options: ['lazy', 'eager'],
       description: 'specifies how image should load',
+      default: 'lazy',
     },
-    alt: { control: 'string', description: 'specifies image alt attribute', required: true },
-    placeholder: { control: 'text', description: 'specifies image alt' },
+    alt: { control: 'text', description: 'specifies image alt attribute' },
+    placeholder: {
+      control: 'text',
+      description: 'base64url string that will be used as background while main image loads',
+    },
     blur: {
       control: 'number',
       description: 'specifies placeholder image blur amount, if set to zero than no blur effect is applied',
