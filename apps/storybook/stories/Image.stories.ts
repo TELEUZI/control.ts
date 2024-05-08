@@ -82,8 +82,8 @@ export const Srcset: Story = {
 export const Density: Story = {
   args: {
     src: 'duck.jpeg',
-    // width: 500,
-    // height: 500,
+    width: 500,
+    height: 500,
     srcset: '2x',
     sizes: '(max-width: 600px): 2x',
     alt: 'Density srcset',
