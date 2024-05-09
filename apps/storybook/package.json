@@ -14,7 +14,7 @@
     "@control.ts/design-system": "workspace:*"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^1",
+    "@chromatic-com/storybook": "^1.3.4",
     "@control.ts/eslint-config": "workspace:*",
     "@control.ts/prettier-config": "workspace:*",
     "@control.ts/typescript-config": "workspace:*",
