@@ -48,20 +48,21 @@ export interface OptimizedImageProps {
   alt: string;
 
   /**
-   * Specifies image placeholder which is by default blurred by `15px`
-   * which is `Base64` string
+   * Specifies an image placeholder, which is by default blurred by `15px`, represented as either a Base64 string or `true`.
+   *
+   * If set to `true`, a custom `loader` function must be provided. The result of this function will be used as the placeholder.
    */
   placeholder?: string | true;
 
   /**
-   * blur amount for the placeholder image specified pixels
-   * default value is 15px.
+   * Specifies the amount of blur applied to the placeholder image, measured in pixels.
+   * The default value is 15 pixels.
    */
   blur?: number;
 
   /**
-   * Specifies image filling.
-   * if set to true, height and width are no longer required
+   * Specifies how the image should fill its container.
+   * If set to `true`, the image will fill its container, and the `height` and `width` properties are no longer required.
    */
   fill?: boolean;
 
@@ -73,6 +74,25 @@ export interface OptimizedImageProps {
    * If no loader is provided, a default loader function will be used. This function
    * converts image sources to a format like `[baseImageSrcWithoutExt]-[size].[ext]`.
    */
+
+  /**
+   * Specifies the `srcset` attribute for the image. It accepts a string in the
+   * format such as `'100w, 500w'` or `'0.5x, 2x'` and applies a loader function
+   * if provided.
+   *
+   * If no loader loader function was provided, a default loader function will
+   * be used.
+   *
+   * Default loader function converts base image source and descriptor to
+   * `[baseImageSourceWithoutExtension]-[widthOrDensityDescriptor].[baseIamgeExtension]`.
+   *
+   * @example
+   * OptimizedImage({
+   *   src: 'path/to/some/image.webp',
+   *   srcset: '100w, 200w'
+   * })
+   * // Result: `<img src="path/to/some/image.webp" srcset="path/to/some/image-100w.webp 100w, path/to/some/image-200w.webp 200w">`
+   */
   srcset?: string;
 
   /**
@@ -81,10 +101,11 @@ export interface OptimizedImageProps {
   sizes?: string;
 
   /**
-   * Function used to rewrite `srcset` attributes.
+   * A function used to rewrite `srcset` attributes or create placeholder images.
    *
-   * The default loader function converts the source and size to a string format
-   * like `[baseImageSrcWithoutExt]-[size].[ext]`.
+   * If this function is used to create a placeholder image, the `isPlaceholder`
+   * field in the `ImageLoaderConfig` object will be set to `true`
+   *
    */
   loader?: Loader;
 }
@@ -137,9 +158,17 @@ const getPlaceholderUrl = (props: OptimizedImageProps) => {
 /**
  * Optmized image component which enforces best practices for loading images.
  * Warns if image is distroted and shows how to fix it.
- * Make sure to add `<link rel="preload" as="image" href="<image src here">` tag in head.
+ * Make sure to add `<link rel="preload" as="image" href="<image src here">` tag in head if the image is high priority.
  * @see {@link OptimizedImageProps}
  * @returns new `OptimizedImage`
+ *
+ * @example
+ * OptimizedImage({
+ *   src: 'path/to/some/kitty.webp',
+ *   width: 500,
+ *   height: 500,
+ *   alt: 'cute kitty image'
+ * })
  */
 export const OptimizedImage = (props: OptimizedImageProps) => {
   const {
