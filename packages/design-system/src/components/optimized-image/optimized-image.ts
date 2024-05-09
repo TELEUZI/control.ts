@@ -12,7 +12,7 @@ export type Laziness = 'lazy' | 'eager';
 export type Priority = 'low' | 'high' | 'auto';
 
 /**
- * Optimzied image props
+ * Optimized image props
  * @see {@link OptimizedImage}
  */
 export interface OptimizedImageProps {
