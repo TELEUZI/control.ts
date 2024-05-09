@@ -14,7 +14,10 @@ export const validatePlaceholder = (placeholder: string) => {
   if (placeholder.length >= dataUrlLengthWarn) {
     console.warn('The data URL for the image is long. Consider reducing its size.');
   }
+
+  return placeholder;
 };
 
 /** @internal */
-export const validateFn = (loader: Loader, config: ImageLoaderConfig) => validatePlaceholder(loader(config));
+export const validatePlaceholderFunction = (loader: Loader, config: ImageLoaderConfig) =>
+  validatePlaceholder(loader(config));

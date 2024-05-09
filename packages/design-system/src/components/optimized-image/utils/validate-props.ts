@@ -1,5 +1,5 @@
 import type { OptimizedImageProps } from '../optimized-image';
-import { validateDimensions } from './validate-metrics';
+import { validateDimensions } from './validate-dimensions';
 import { validatePlaceholder } from './validate-placeholder';
 import { validateSrcset } from './validate-srcset';
 
@@ -16,4 +16,6 @@ export const validateProps = (props: OptimizedImageProps) => {
   if (props.srcset) {
     validateSrcset(props.src, props.srcset);
   }
+
+  return props;
 };
