@@ -9,14 +9,14 @@ const defaultLoader: Loader = (config) => {
   return config.src.slice(0, index) + `-${config.width}` + config.src.slice(index);
 };
 
-const createSizeToSrcset = (src: string, imageWidth: number, loader?: Loader) => {
+const createSizeToSrcset = (src: string, imageWidth: number, loader: Loader = defaultLoader) => {
   const isWidthSrcset = widthRegexp.test(src);
 
   return (size: string) => {
     const width = size.trim();
     const widthAsNumber = isWidthSrcset ? parseFloat(size) : parseFloat(size) * imageWidth;
 
-    return `${loader ? loader({ src, width, widthAsNumber }) : defaultLoader({ src, width, widthAsNumber })} ${width}`;
+    return `${loader({ src, width, widthAsNumber })} ${width}`;
   };
 };
 
