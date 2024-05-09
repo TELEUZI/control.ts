@@ -11,8 +11,6 @@ import { validateProps } from './utils/validate-props';
 export type Laziness = 'lazy' | 'eager';
 export type Priority = 'low' | 'high' | 'auto';
 
-// raji-nazi-4mo
-
 /**
  * Optimzied image props
  * @see {@link OptimizedImage}
