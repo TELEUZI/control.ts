@@ -1,7 +1,7 @@
 import type { BaseComponent } from '@control.ts/min';
 
 import type { OptimizedImageElement } from '../optimized-image';
-import { findClosestToRatio, flatRatio, type Metrics, ratio, wrap } from './metrics';
+import { type Dimensions, findClosestToRatio, flatRatio, ratio, wrap } from './deminsions';
 import { objectFromEntries } from './object-from-entries';
 
 const sides = ['left', 'right', 'top', 'bottom'] as const;
@@ -13,7 +13,7 @@ const getPadding = (computed: CSSStyleDeclaration): Padding => {
 };
 
 /** @internal */
-export const getComputedMetrics = (computed: CSSStyleDeclaration): Metrics => {
+export const getComputedMetrics = (computed: CSSStyleDeclaration): Dimensions => {
   const width = parseFloat(computed.getPropertyValue('width'));
   const height = parseFloat(computed.getPropertyValue('height'));
 
@@ -33,6 +33,8 @@ const formatIntrinsic = formatDimensions('Intrinsic');
 const formatSupplied = formatDimensions('Supplied');
 const formatRendered = formatDimensions('Rendered');
 
+const desiredAccuracy = 0.1;
+
 export const assertNoDistortion = (img: BaseComponent<OptimizedImageElement>, width: number, height: number) => {
   const computed = window.getComputedStyle(img.node);
   const metrics = getComputedMetrics(computed);
@@ -45,8 +47,9 @@ export const assertNoDistortion = (img: BaseComponent<OptimizedImageElement>, wi
 
   const suppliedRatio = flatRatio(width, height);
 
-  const inaccurateDimensions = Math.abs(suppliedRatio - intrinsicAspectRatio) > 0.1;
-  const stylingDistortion = nonZeroRenderedDimensions && Math.abs(intrinsicAspectRatio - renderedRatio) > 0.1;
+  const inaccurateDimensions = Math.abs(suppliedRatio - intrinsicAspectRatio) > desiredAccuracy;
+  const stylingDistortion =
+    nonZeroRenderedDimensions && Math.abs(intrinsicAspectRatio - renderedRatio) > desiredAccuracy;
 
   if (inaccurateDimensions) {
     const closest = findClosestToRatio(width, height, intrinsicAspectRatio);
