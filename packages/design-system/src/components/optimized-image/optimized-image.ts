@@ -1,6 +1,6 @@
 import { BaseComponent } from '@control.ts/min';
 
-import { DefaultBlurAmount } from './constants';
+import { defaultBlurAmount } from './constants';
 import { generateSrcset } from './generate-srcset';
 import type { Loader } from './types/loader';
 import { createImageProps } from './utils/create-image-props';
@@ -112,7 +112,7 @@ export interface OptimizedImageProps {
 
 const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placeholder: string, blur?: number) => {
   const styles: Partial<CSSStyleDeclaration> = {
-    filter: `blur(${blur ?? DefaultBlurAmount}px)`,
+    filter: `blur(${blur ?? defaultBlurAmount}px)`,
     backgroundImage: `url(${placeholder})`,
     backgroundPosition: '50%, 50%',
     backgroundRepeat: 'no-repeat',
