@@ -1,14 +1,14 @@
 /** @internal */
-export interface Metrics {
+export interface Dimensions {
   width: number;
   height: number;
 }
 
 /** @internal */
-export const wrap = (width: number, height: number): Metrics => ({ width, height });
+export const wrap = (width: number, height: number): Dimensions => ({ width, height });
 
 /** @internal */
-export const ratio = (metrics: Metrics) => metrics.width / metrics.height;
+export const ratio = (metrics: Dimensions) => metrics.width / metrics.height;
 
 /** @internal */
 export const flatRatio = (width: number, height: number) => width / height;
