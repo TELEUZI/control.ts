@@ -1,7 +1,7 @@
 import type { Loader } from './types/loader';
 import { widthRegexp } from './utils/validate-srcset';
 
-const isNotEmpty = (string: string) => string.trim() !== '';
+const isNotEmptyString = (string: string) => string.trim() !== '';
 
 const defaultLoader: Loader = (config) => {
   const index = config.src.lastIndexOf('.');
@@ -24,7 +24,7 @@ const createSizeToSrcset = (src: string, imageWidth: number, loader?: Loader) =>
 export const generateSrcset = (src: string, sizes: string, width: number, loader?: Loader) => {
   return sizes
     .split(',')
-    .filter(isNotEmpty)
+    .filter(isNotEmptyString)
     .map(createSizeToSrcset(src, width, loader))
     .join(', ');
 };
