@@ -194,7 +194,9 @@ export const OptimizedImage = (props: OptimizedImageProps) => {
   });
 
   if (srcset) {
+    console.time('srcset');
     img.node.srcset = generateSrcset(src, srcset, width!);
+    console.timeEnd('srcset');
   }
 
   if (placeholder) {

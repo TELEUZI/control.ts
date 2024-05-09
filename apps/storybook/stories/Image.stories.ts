@@ -72,7 +72,7 @@ export const Fill: Story = {
 export const Srcset: Story = {
   args: {
     src: 'duck.jpeg',
-    srcset: '1300w, 1500w',
+    srcset: '1300w, 1500w, 1600w, 1700w',
     sizes: '(max-width: 1300px): 1300w, (max-width: 1400px): 1500w',
     alt: 'srcset test',
     fill: true,

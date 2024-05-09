@@ -22,9 +22,10 @@ const createSizeToSrcset = (src: string, imageWidth: number, loader?: Loader) =>
 
 /** @internal */
 export const generateSrcset = (src: string, sizes: string, width: number, loader?: Loader) => {
+  const convertSizeToSrcset = createSizeToSrcset(src, width, loader);
+
   return sizes
     .split(',')
-    .filter(isNotEmptyString)
-    .map(createSizeToSrcset(src, width, loader))
+    .reduce<string[]>((acc, curr) => (isNotEmptyString(curr) ? acc.concat(convertSizeToSrcset(curr)) : acc), [])
     .join(', ');
 };
