@@ -156,7 +156,7 @@ const getPlaceholderUrl = (props: OptimizedImageProps) => {
 };
 
 /**
- * Optmized image component which enforces best practices for loading images.
+ * Optimized image component which enforces best practices for loading images.
  * Warns if image is distroted and shows how to fix it.
  * Make sure to add `<link rel="preload" as="image" href="<image src here">` tag in head if the image is high priority.
  * @see {@link OptimizedImageProps}
