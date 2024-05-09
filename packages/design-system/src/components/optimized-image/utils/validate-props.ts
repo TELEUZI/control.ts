@@ -14,7 +14,7 @@ export const validateProps = (props: OptimizedImageProps) => {
   }
 
   if (props.srcset) {
-    validateSrcset(props.srcset);
+    validateSrcset(props.src, props.srcset);
   }
 
   return props;
