@@ -6,6 +6,8 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "lint:fix": "eslint . --fix --ext=ts",
+    "test": "turbo test",
+    "coverage": "turbo coverage",
     "prepare": "husky",
     "format": "prettier --write --ignore-unknown .",
     "add-changeset": "changeset add",
