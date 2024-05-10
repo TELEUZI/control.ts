@@ -1,5 +1,11 @@
 # @control.ts/min
 
+## 0.1.8
+
+### Patch Changes
+
+- c156b37: fix override modifier
+
 ## 0.1.7
 
 ### Patch Changes

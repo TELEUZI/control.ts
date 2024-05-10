@@ -1,7 +1,7 @@
 {
   "name": "@control.ts/design-system",
   "description": "Design system for control.ts",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Yauheni Tsurankou <ikk.pott@gmail.com> (https://github.com/TELEUZI/TELEUZI)",
   "private": true,
   "repository": {
