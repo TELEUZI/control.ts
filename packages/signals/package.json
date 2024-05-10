@@ -1,7 +1,7 @@
 {
   "name": "@control.ts/signals",
   "description": "A signal-based version of the control.ts library. Contains base components for easy creating HTML elements with functions.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Yauheni Tsurankou <ikk.pott@gmail.com> (https://github.com/TELEUZI/TELEUZI)",
   "repository": {
     "directory": "packages/min",
