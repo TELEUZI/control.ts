@@ -1,5 +1,11 @@
 # @control.ts/min
 
+## 0.0.3
+
+### Patch Changes
+
+- 871e88d: add bc-to-fc for component packages
+
 ## 0.0.2
 
 ### Patch Changes

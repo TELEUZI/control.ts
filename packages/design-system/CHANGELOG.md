@@ -1,5 +1,13 @@
 # @control.ts/design-system
 
+## 0.0.5
+
+### Patch Changes
+
+- 871e88d: add bc-to-fc for component packages
+- Updated dependencies [871e88d]
+  - @control.ts/min@0.1.9
+
 ## 0.0.4
 
 ### Patch Changes
