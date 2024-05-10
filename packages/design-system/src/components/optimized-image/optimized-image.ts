@@ -21,13 +21,13 @@ export interface BaseOptimizedImageProps {
    * Specifies Image width
    * **required** if `fill` is true, then it is not required
    */
-  width?: number;
+  width: number;
 
   /**
    * Specifies Image height
    * **required** if `fill` is true, then it is not required
    */
-  height?: number;
+  height: number;
 
   /**
    * Specifies image src.
@@ -116,9 +116,27 @@ interface LoaderProps {
   loader: Loader;
 }
 
-type OptimizedImageWithLoaderProps = Omit<BaseOptimizedImageProps, 'placeholder' | 'loader'> & LoaderProps;
+/** @internal */
+export interface WithFillProps {
+  fill: true;
+  width?: never;
+  height?: never;
+  srcset?: undefined;
+}
 
-export type OptimizedImageProps = OptimizedImageWithLoaderProps | BaseOptimizedImageProps;
+interface WithSrcset {
+  srcset: string;
+  width: number;
+}
+
+/** @internal */
+export type ReplaceOptimizedImageProps<T> = Omit<BaseOptimizedImageProps, keyof T> & T;
+
+export type OptimizedImageProps =
+  | ReplaceOptimizedImageProps<LoaderProps>
+  | ReplaceOptimizedImageProps<WithSrcset>
+  | ReplaceOptimizedImageProps<WithFillProps>
+  | BaseOptimizedImageProps;
 
 const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placeholder: string, blur?: number) => {
   const styles: Partial<CSSStyleDeclaration> = {
@@ -197,7 +215,7 @@ export const OptimizedImage = (props: OptimizedImageProps) => {
   });
 
   if (srcset) {
-    img.node.srcset = generateSrcset(src, srcset, width!);
+    img.node.srcset = generateSrcset(src, srcset, width);
   }
 
   if (hasPlaceholder(props)) {
@@ -207,7 +225,7 @@ export const OptimizedImage = (props: OptimizedImageProps) => {
   if (isFill) {
     fill(img);
   } else {
-    lazyAssertNoDistortion(img, width!, height!);
+    lazyAssertNoDistortion(img, width, height);
   }
 
   return img;
