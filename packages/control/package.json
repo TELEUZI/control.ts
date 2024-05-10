@@ -1,7 +1,7 @@
 {
   "name": "@control.ts/control",
   "description": "Heart of the library: base class for abstraction from HTML. It provides a way to create and manage components.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Yauheni Tsurankou <ikk.pott@gmail.com> (https://github.com/TELEUZI)",
   "repository": {
     "directory": "packages/control",
