@@ -1,5 +1,5 @@
 import { Button } from '@components/button/button';
-import { BaseComponent, div, div$, h2 } from '@control.ts/signals';
+import { BaseComponent, bcToFc, div, div$, h2 } from '@control.ts/signals';
 
 import styles from './modal-window.module.scss';
 
@@ -74,4 +74,4 @@ class ModalWindowComponent extends BaseComponent {
   };
 }
 
-export const ModalWindow = (config: IModalPopup) => new ModalWindowComponent(config);
+export const ModalWindow = bcToFc(ModalWindowComponent);
