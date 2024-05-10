@@ -1,5 +1,13 @@
 # @control.ts/min
 
+## 0.1.10
+
+### Patch Changes
+
+- f0f871f: Add bc-to-fc API as public, add node property accessor
+- Updated dependencies [f0f871f]
+  - @control.ts/control@0.0.3
+
 ## 0.1.9
 
 ### Patch Changes
