@@ -70,6 +70,11 @@
       "types": "./dist/utils.d.ts",
       "require": "./dist/utils.js",
       "import": "./dist/utils.mjs"
+    },
+    "./bc-to-fc": {
+      "types": "./dist/bc-to-fc.d.ts",
+      "require": "./dist/bc-to-fc.js",
+      "import": "./dist/bc-to-fc.mjs"
     }
   },
   "main": "./dist/index.js",
