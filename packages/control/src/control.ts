@@ -110,4 +110,8 @@ export abstract class Control<T extends HTMLElement = HTMLElement> {
   protected removeFromChildren(child: Control): void {
     this.children = this.children.filter((c) => c !== child);
   }
+
+  public getPropertyFromNode(key: keyof HTMLElement) {
+    return this._node[key];
+  }
 }
