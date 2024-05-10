@@ -1,5 +1,8 @@
 {
   "extends": "@control.ts/typescript-config/base.json",
   "include": ["src/**/*.ts", "vite.config.mts"],
-  "exclude": ["dist", "node_modules"]
+  "exclude": ["dist", "node_modules"],
+  "compilerOptions": {
+    "stripInternal": true
+  }
 }

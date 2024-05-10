@@ -14,18 +14,20 @@
     "@control.ts/design-system": "workspace:*"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^1.3.4",
     "@control.ts/eslint-config": "workspace:*",
     "@control.ts/prettier-config": "workspace:*",
     "@control.ts/typescript-config": "workspace:*",
-    "@storybook/addon-essentials": "^8.0.4",
-    "@storybook/addon-interactions": "^8.0.4",
-    "@storybook/addon-links": "^8.0.4",
-    "@storybook/blocks": "^8.0.4",
-    "@storybook/html": "^8.0.4",
-    "@storybook/html-vite": "^8.0.4",
-    "@storybook/test": "^8.0.4",
+    "@storybook/addon-essentials": "^8.0.10",
+    "@storybook/addon-interactions": "^8.0.10",
+    "@storybook/addon-links": "^8.0.10",
+    "@storybook/addon-mdx-gfm": "^8.0.10",
+    "@storybook/blocks": "^8.0.10",
+    "@storybook/html": "^8.0.10",
+    "@storybook/html-vite": "^8.0.10",
+    "@storybook/test": "^8.0.10",
     "serve": "^14.2.1",
-    "storybook": "^8.0.4",
+    "storybook": "^8.0.10",
     "typescript": "^5.3.3",
     "vite": "4.5.3"
   }
