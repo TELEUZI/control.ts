@@ -7,7 +7,7 @@ export type BaseComponentChild<T extends HTMLElement = HTMLElement> = ComponentC
 export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<T> {
   protected _node: T;
 
-  public override children: BaseComponent[] = [];
+  public children: BaseComponent[] = [];
 
   constructor(p: ComponentProps<T>, ...children: BaseComponentChild[]) {
     super();
