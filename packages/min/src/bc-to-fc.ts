@@ -1,4 +1,4 @@
-import type { BaseComponent } from '@control.ts/min';
+import type { BaseComponent } from './base-component';
 
 /**
  * Converts a class component to a functional component.
