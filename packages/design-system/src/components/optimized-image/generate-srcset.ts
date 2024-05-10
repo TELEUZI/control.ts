@@ -18,7 +18,7 @@ const createSizeToSrcset = (src: string, imageWidth: number, loader: Loader = de
     const widthAsNumber = isWidthSrcset ? parseFloat(size) : parseFloat(size) * imageWidth;
 
     if (Number.isNaN(widthAsNumber)) {
-      throw new DesignSystemError('unexpected nan');
+      throw new DesignSystemError('unexpected NaN');
     }
 
     return `${loader({ src, width, widthAsNumber })} ${width}`;

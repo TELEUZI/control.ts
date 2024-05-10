@@ -1,10 +1,10 @@
-import type { Unsubscribe } from '@control.ts/control';
 import { BaseComponent } from '@control.ts/min';
 
 import { defaultBlurAmount } from './constants';
 import { generateSrcset } from './generate-srcset';
 import type { Loader } from './types/loader';
 import { createImageProps } from './utils/create-image-props';
+import { hasPlaceholder, type OptimizedImagePropsWithPlaceholder } from './utils/has-placeholder';
 import { keys } from './utils/keys';
 import { validatePlaceholderFunction } from './utils/validate-placeholder';
 import { validateProps } from './utils/validate-props';
@@ -16,7 +16,7 @@ export type Priority = 'low' | 'high' | 'auto';
  * Optimized image props
  * @see {@link OptimizedImage}
  */
-export interface OptimizedImageProps {
+export interface BaseOptimizedImageProps {
   /**
    * Specifies Image width
    * **required** if `fill` is true, then it is not required
@@ -53,7 +53,7 @@ export interface OptimizedImageProps {
    *
    * If set to `true`, a custom `loader` function must be provided. The result of this function will be used as the placeholder.
    */
-  placeholder?: string | true;
+  placeholder?: string;
 
   /**
    * Specifies the amount of blur applied to the placeholder image, measured in pixels.
@@ -111,7 +111,16 @@ export interface OptimizedImageProps {
   loader?: Loader;
 }
 
-const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placeholder: string, blur?: number): Unsubscribe => {
+interface LoaderProps {
+  placeholder: true;
+  loader: Loader;
+}
+
+type OptimizedImageWithLoaderProps = Omit<BaseOptimizedImageProps, 'placeholder' | 'loader'> & LoaderProps;
+
+export type OptimizedImageProps = OptimizedImageWithLoaderProps | BaseOptimizedImageProps;
+
+const createPlaceholder = (img: BaseComponent<HTMLImageElement>, placeholder: string, blur?: number) => {
   const styles: Partial<CSSStyleDeclaration> = {
     filter: `blur(${blur ?? defaultBlurAmount}px)`,
     backgroundImage: `url(${placeholder})`,
@@ -150,10 +159,14 @@ export const lazyAssertNoDistortion = (img: BaseComponent<OptimizedImageElement>
   );
 };
 
-const getPlaceholderUrl = (props: OptimizedImageProps) => {
+const getPlaceholderUrl = (props: OptimizedImagePropsWithPlaceholder) => {
   return props.placeholder === true
-    ? validatePlaceholderFunction(props.loader!, { src: props.src, isPlaceholder: true, widthAsNumber: props.width })
-    : props.placeholder!;
+    ? validatePlaceholderFunction(props.loader, {
+        src: props.src,
+        isPlaceholder: true,
+        widthAsNumber: props.width ?? 0,
+      })
+    : props.placeholder;
 };
 
 /**
@@ -172,18 +185,7 @@ const getPlaceholderUrl = (props: OptimizedImageProps) => {
  * })
  */
 export const OptimizedImage = (props: OptimizedImageProps) => {
-  const {
-    src,
-    laziness = 'lazy',
-    width,
-    height,
-    alt,
-    blur,
-    fill: isFill,
-    placeholder,
-    srcset,
-    sizes,
-  } = validateProps(props);
+  const { src, laziness = 'lazy', width, height, alt, blur, fill: isFill, srcset, sizes } = validateProps(props);
 
   const img = new BaseComponent<OptimizedImageElement>({
     src,
@@ -198,7 +200,7 @@ export const OptimizedImage = (props: OptimizedImageProps) => {
     img.node.srcset = generateSrcset(src, srcset, width!);
   }
 
-  if (placeholder) {
+  if (hasPlaceholder(props)) {
     img.once('load', createPlaceholder(img, getPlaceholderUrl(props), blur));
   }
 
