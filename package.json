@@ -7,6 +7,7 @@
     "lint": "turbo lint",
     "lint:fix": "eslint . --fix --ext=ts",
     "test": "turbo test",
+    "test:run": "turbo test:run",
     "coverage": "turbo coverage",
     "prepare": "husky",
     "format": "prettier --write --ignore-unknown .",
