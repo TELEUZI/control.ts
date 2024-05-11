@@ -111,7 +111,29 @@ export abstract class Control<T extends HTMLElement = HTMLElement> {
     this.children = this.children.filter((c) => c !== child);
   }
 
+  public destroyChild(child: Control): void {
+    child.destroy();
+  }
+
   public getPropertyFromNode(key: keyof HTMLElement) {
     return this._node[key];
+  }
+
+  public stylize<K extends keyof CSSStyleDeclaration>(style: K, value: CSSStyleDeclaration[K]): void;
+  public stylize(style: Partial<CSSStyleDeclaration>): void;
+  public stylize<K extends keyof CSSStyleDeclaration>(
+    style: K | Partial<CSSStyleDeclaration>,
+    value?: CSSStyleDeclaration[K],
+  ): void {
+    if (typeof style !== 'object' && value) {
+      this._node.style[style] = value;
+      return;
+    }
+
+    Object.assign(this._node.style, style);
+  }
+
+  public unstylize<K extends keyof CSSStyleDeclaration>(...keys: K[]) {
+    keys.forEach((key) => this._node.style.removeProperty(key.toString()));
   }
 }

@@ -39,22 +39,8 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
     }
   }
 
-  public stylize<K extends keyof CSSStyleDeclaration>(style: K, value: CSSStyleDeclaration[K]): void;
-  public stylize(style: Partial<CSSStyleDeclaration>): void;
-  public stylize<K extends keyof CSSStyleDeclaration>(
-    style: K | Partial<CSSStyleDeclaration>,
-    value?: CSSStyleDeclaration[K],
-  ): void {
-    if (typeof style !== 'object' && value) {
-      this._node.style[style] = value;
-      return;
-    }
-
-    Object.assign(this._node.style, style);
-  }
-
-  public unstylize<K extends keyof CSSStyleDeclaration>(...keys: K[]) {
-    keys.forEach((key) => this._node.style.removeProperty(key.toString()));
+  public replaceWith(child: BaseComponent | HTMLElement | Comment): void {
+    this._node.replaceWith(child instanceof BaseComponent ? child.node : child);
   }
 }
 
