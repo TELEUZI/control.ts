@@ -18,6 +18,9 @@
     },
     "coverage": {
       "cache": true
+    },
+    "test:run": {
+      "cache": true
     }
   }
 }
