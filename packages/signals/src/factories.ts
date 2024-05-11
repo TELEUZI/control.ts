@@ -8,9 +8,9 @@ export { createElement, createElementFactory, createElementFactoryWithCustomProp
 
 export function createElement$<T extends TagName>(
   props: BaseComponentProps<HTMLElementTagNameMap[T]> & { tag: T },
-  children?: BaseComponentChild[],
+  children: BaseComponentChild[],
 ) {
-  return new BaseComponent<HTMLElementTagNameMap[T]>(props, ...(children ?? []));
+  return new BaseComponent<HTMLElementTagNameMap[T]>(props, ...children);
 }
 
 export function createElementFactory$<T extends TagName>(tag: T) {
