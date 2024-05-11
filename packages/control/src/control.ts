@@ -101,10 +101,6 @@ export abstract class Control<T extends HTMLElement = HTMLElement> {
     this._node.removeChild(child.node);
   }
 
-  public destroyChild(child: Control): void {
-    child.destroy();
-  }
-
   public getPropertyFromNode(key: keyof HTMLElement) {
     return this._node[key];
   }
