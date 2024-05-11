@@ -183,6 +183,8 @@ describe('BaseComponent', () => {
 });
 
 describe('Subscriptions testing integration', () => {
+  const destroyResoursesTimeout = 50;
+
   class TestComponent2 extends TestComponent {
     public override destroy(): void {
       super.destroy();
@@ -223,9 +225,7 @@ describe('Subscriptions testing integration', () => {
     const mock = vi.fn().mockReturnValue(undefined);
     const firstChild = new TestComponent({ textContent: 'Hello', className: 'first' });
     firstChild.subscribe(mock);
-    firstChild.subscribe(() => {
-      console.log('Hello', Date.now());
-    });
+    firstChild.subscribe(() => {});
 
     const emptyChild = new TestComponent({ textContent: 'EMPTY', className: 'empty' });
     const component = new TestComponent({}, firstChild);
@@ -240,7 +240,7 @@ describe('Subscriptions testing integration', () => {
       expect(firstChild._subscriptions.length).toBe(0);
 
       expect(mock).toHaveBeenCalledTimes(1);
-    }, 20);
+    }, destroyResoursesTimeout);
 
     component.append(emptyChild);
 

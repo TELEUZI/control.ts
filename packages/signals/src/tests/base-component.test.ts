@@ -13,6 +13,8 @@ class TestComponent extends BaseComponent {
   }
 }
 
+const destroyResoursesTimeout = 50;
+
 describe('BaseComponent', () => {
   it('should create a new instance of BaseComponent with given props and children', () => {
     const child1 = document.createElement('span');
@@ -313,7 +315,7 @@ describe('Signals integration', () => {
     setTimeout(() => {
       expect(firstChild._subscriptions.length).toBe(0);
       expect(component._subscriptions.length).toBe(0);
-    }, 100);
+    }, destroyResoursesTimeout);
   });
 
   it('should update components properly for 2 steps inside signals', () => {
@@ -360,7 +362,7 @@ describe('Signals integration', () => {
       expect(thirdChild._subscriptions.length).toBe(0);
       expect(emptyChild._subscriptions.length).toBe(0);
       expect(component._subscriptions.length).toBe(0);
-    }, 100);
+    }, destroyResoursesTimeout);
   });
 
   it('should remove subscriptions properly for 2 steps inside signals', () => {
@@ -390,6 +392,6 @@ describe('Signals integration', () => {
     setTimeout(() => {
       expect(firstChild._subscriptions.length).toBe(0);
       expect(component._subscriptions.length).toBe(0);
-    }, 100);
+    }, destroyResoursesTimeout);
   });
 });
