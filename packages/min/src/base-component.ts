@@ -13,8 +13,7 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
     super();
     p.txt && (p.textContent = p.txt);
     const node = document.createElement(p.tag ?? 'div') as T;
-    Object.assign(node, p);
-    this._node = node;
+    this._node = Object.assign(node, p);
     if (p.style) {
       this.applyStyle(p.style);
     }
