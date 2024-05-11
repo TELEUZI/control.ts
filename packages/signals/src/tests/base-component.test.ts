@@ -286,7 +286,7 @@ describe('Signals integration', () => {
     expect(component.node.children.item(0)?.textContent).toBe('Hello');
   });
 
-  it('should remove all subscriptions after replacing element', async () => {
+  it('should remove all subscriptions after replacing element', () => {
     const data = $('Hello');
     const firstChild = new TestComponent({ textContent: data, className: 'first' });
     const emptyChild = new TestComponent({ textContent: 'EMPTY', className: 'empty' });
