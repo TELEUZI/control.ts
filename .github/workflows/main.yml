@@ -1,17 +1,17 @@
 name: CI
-on: # event list
-  push: # on a pull request to each of these branches
+on:
+  push:
     branches:
       - '*'
 
-env: # environment variables (available in any part of the action)
+env:
   NODE_VERSION: 20
 
-jobs: # list of things to do
+jobs:
   ci:
-    name: lint and build # job name (unique id)
-    runs-on: ubuntu-latest # on which machine to run
-    steps: # list of steps
+    name: lint, build, test
+    runs-on: ubuntu-latest
+    steps:
       - name: Code Checkout
         uses: actions/checkout@v4
 
