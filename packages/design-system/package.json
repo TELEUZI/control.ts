@@ -14,6 +14,7 @@
     "build": "vite build && tsc --project tsconfig.build.json --declaration --emitDeclarationOnly --outDir dist",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "test": "vitest",
+    "test:run": "vitest run",
     "coverage": "vitest run --coverage",
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix ./src",
