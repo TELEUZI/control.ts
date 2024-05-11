@@ -52,8 +52,8 @@ function createComponentsFileContent(tags: string[]) {
     .join('')}`;
 }
 
-function createFileWithTags(fileContent: string, fileName: string, pathTo: string) {
-  const filePath = path.join(__dirname, path.relative('packages/tags-scraper/src/', pathTo), fileName);
+function createFileWithTags(fileContent: string, fileName: string) {
+  const filePath = path.join(__dirname, path.relative('packages/tags-scraper/src/', 'packages/min/src/'), fileName);
   return writeFile(filePath, fileContent);
 }
 
@@ -66,10 +66,8 @@ async function run() {
   const content = createElementsFileContent(tags);
   const componentsContent = createComponentsFileContent(tags);
   try {
-    await createFileWithTags(content, 'element-tags.ts', 'packages/control/src/');
-    await createFileWithTags(``, 'element-tags.ts', 'packages/min/src/');
-    await createFileWithTags(componentsContent, 'component-tags.ts', 'packages/min/src/');
-    await createFileWithTags(componentsContent, 'component-tags.ts', 'packages/signals/src/');
+    await createFileWithTags(content, 'element-tags.ts');
+    await createFileWithTags(componentsContent, 'component-tags.ts');
     console.log('File is with tags is created!');
   } catch (error) {
     console.error('File is not created!', error);
