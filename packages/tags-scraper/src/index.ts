@@ -2,6 +2,12 @@ import { load } from 'cheerio';
 import { writeFile } from 'fs/promises';
 import path from 'path';
 
+interface FromInfo {
+  fileContent: string;
+  fileName: string;
+  filePath: string;
+}
+
 const tagsScrapeURL = 'https://developer.mozilla.org/en-US/docs/Web/HTML/Element';
 const tagsSelector = 'section > h2:not(#obsolete_and_deprecated_elements) + div  table > tbody > tr > td > a > code';
 const tagOutsideTHTMLElementTagNameMap = new Set(['portal', 'svg']);
@@ -26,7 +32,7 @@ function parseHTMLTags(body: string, tag: string) {
   return Array.from(new Set(tags));
 }
 
-function createElementsFileContent(tags: string[]) {
+function createElementsFileContent(tags: string[], additionalCharacter?: string) {
   return `
   import { createElementFactory } from './base-component';
 
@@ -34,27 +40,17 @@ function createElementsFileContent(tags: string[]) {
     .map((tag) => tag.slice(1, -1))
     .filter((tag) => !tagOutsideTHTMLElementTagNameMap.has(tag))
     .map((tagName) => {
-      return `export const ${tagName !== 'var' ? tagName : 'varTag'} = createElementFactory('${tagName}');\n`;
+      return `export const ${tagName !== 'var' ? tagName : 'varTag'}${additionalCharacter} = createElementFactory${additionalCharacter}('${tagName}');\n`;
     })
     .join('')}`;
 }
 
-function createComponentsFileContent(tags: string[]) {
-  return `
-  import { createElementFactory$ } from './factories';
-
-  ${tags
-    .map((tag) => tag.slice(1, -1))
-    .filter((tag) => !tagOutsideTHTMLElementTagNameMap.has(tag))
-    .map((tagName) => {
-      return `export const ${tagName}$ = createElementFactory$('${tagName}');\n`;
-    })
-    .join('')}`;
-}
-
-function createFileWithTags(fileContent: string, fileName: string) {
-  const filePath = path.join(__dirname, path.relative('packages/tags-scraper/src/', 'packages/min/src/'), fileName);
-  return writeFile(filePath, fileContent);
+function createFiles(filesInfo: FromInfo[]) {
+  filesInfo.forEach((fileInfo) => {
+    const { fileContent, fileName, filePath } = fileInfo;
+    const createdFilePath = path.join(__dirname, path.relative('packages/tags-scraper/src/', filePath), fileName);
+    return writeFile(createdFilePath, fileContent);
+  });
 }
 
 async function run() {
@@ -64,10 +60,23 @@ async function run() {
   }
   const tags = parseHTMLTags(html, tagsSelector);
   const content = createElementsFileContent(tags);
-  const componentsContent = createComponentsFileContent(tags);
+  const componentsContent = createElementsFileContent(tags, '$');
+  const fileInfo = [
+    { fileContent: content, fileName: 'element-tags.ts', filePath: 'packages/control/src/' },
+    { fileContent: componentsContent, fileName: 'component-tags.ts', filePath: 'packages/min/src' },
+    {
+      fileContent: `export * from '@control.ts/control/element-tags';`,
+      fileName: 'element-tags.ts',
+      filePath: 'packages/min/src',
+    },
+    {
+      fileContent: `export * from '@control.ts/control/element-tags';`,
+      fileName: 'element-tags.ts',
+      filePath: 'packages/signals/src',
+    },
+  ];
   try {
-    await createFileWithTags(content, 'element-tags.ts');
-    await createFileWithTags(componentsContent, 'component-tags.ts');
+    createFiles(fileInfo);
     console.log('File is with tags is created!');
   } catch (error) {
     console.error('File is not created!', error);
