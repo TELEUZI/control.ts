@@ -34,7 +34,7 @@ function parseHTMLTags(body: string, tag: string) {
 
 function createElementsFileContent(tags: string[], additionalCharacter: string = '') {
   return `
-  import { createElementFactory } from './base-component';
+  import { createElementFactory$ } from './factories';
 
   ${tags
     .map((tag) => tag.slice(1, -1))
