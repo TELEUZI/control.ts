@@ -32,7 +32,7 @@ function parseHTMLTags(body: string, tag: string) {
   return Array.from(new Set(tags));
 }
 
-function createElementsFileContent(tags: string[], additionalCharacter?: string) {
+function createElementsFileContent(tags: string[], additionalCharacter: string = '') {
   return `
   import { createElementFactory } from './base-component';
 
