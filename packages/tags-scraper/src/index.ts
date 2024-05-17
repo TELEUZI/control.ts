@@ -2,10 +2,10 @@ import { load } from 'cheerio';
 import { writeFile } from 'fs/promises';
 import path from 'path';
 
-interface FromInfo {
-  fileContent: string;
-  fileName: string;
-  filePath: string;
+interface FileInfo {
+  content: string;
+  name: string;
+  path: string;
 }
 
 const tagsScrapeURL = 'https://developer.mozilla.org/en-US/docs/Web/HTML/Element';
@@ -45,12 +45,13 @@ function createElementsFileContent(tags: string[], additionalCharacter?: string)
     .join('')}`;
 }
 
-function createFiles(filesInfo: FromInfo[]) {
-  filesInfo.forEach((fileInfo) => {
-    const { fileContent, fileName, filePath } = fileInfo;
-    const createdFilePath = path.join(__dirname, path.relative('packages/tags-scraper/src/', filePath), fileName);
-    return writeFile(createdFilePath, fileContent);
-  });
+function createFiles(filesInfo: FileInfo[]) {
+  Promise.all(filesInfo).then((fileInfo) =>
+    fileInfo.map(({ content: fileContent, name: fileName, path: filePath }) => {
+      const createdFilePath = path.join(__dirname, path.relative('packages/tags-scraper/src/', filePath), fileName);
+      return writeFile(createdFilePath, fileContent);
+    }),
+  );
 }
 
 async function run() {
@@ -61,19 +62,18 @@ async function run() {
   const tags = parseHTMLTags(html, tagsSelector);
   const content = createElementsFileContent(tags);
   const componentsContent = createElementsFileContent(tags, '$');
+  const componentName = 'component-tags.ts';
+  const elementTagsContent = `export * from '@control.ts/control/element-tags';`;
+  const elementTagsName = 'element-tags.ts';
+  const packagesControlPath = 'packages/control/src/';
+  const packagesMinPath = 'packages/min/src';
+  const packagesSignalsPath = 'packages/signals/src';
+
   const fileInfo = [
-    { fileContent: content, fileName: 'element-tags.ts', filePath: 'packages/control/src/' },
-    { fileContent: componentsContent, fileName: 'component-tags.ts', filePath: 'packages/min/src' },
-    {
-      fileContent: `export * from '@control.ts/control/element-tags';`,
-      fileName: 'element-tags.ts',
-      filePath: 'packages/min/src',
-    },
-    {
-      fileContent: `export * from '@control.ts/control/element-tags';`,
-      fileName: 'element-tags.ts',
-      filePath: 'packages/signals/src',
-    },
+    { content: content, name: elementTagsName, path: packagesControlPath },
+    { content: componentsContent, name: componentName, path: packagesMinPath },
+    { content: elementTagsContent, name: elementTagsName, path: packagesMinPath },
+    { content: elementTagsContent, name: elementTagsName, path: packagesSignalsPath },
   ];
   try {
     createFiles(fileInfo);
