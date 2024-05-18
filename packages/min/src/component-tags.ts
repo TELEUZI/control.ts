@@ -1,3 +1,5 @@
+import { createElementFactory$ } from './factories';
+
 export const html$ = createElementFactory$('html');
 export const base$ = createElementFactory$('base');
 export const head$ = createElementFactory$('head');

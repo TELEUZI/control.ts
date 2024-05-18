@@ -46,7 +46,7 @@ function createElementsFileContent(tags: string[], additionalCharacter: string =
 }
 
 function createFiles(filesInfo: FileInfo[]) {
-  Promise.all(filesInfo).then((fileInfo) =>
+  return Promise.all(filesInfo).then((fileInfo) =>
     fileInfo.map(({ content: fileContent, name: fileName, path: filePath }) => {
       const createdFilePath = path.join(__dirname, path.relative('packages/tags-scraper/src/', filePath), fileName);
       return writeFile(createdFilePath, fileContent);
@@ -77,7 +77,7 @@ async function run() {
     { content: elementTagsContent, name: elementTagsName, path: packagesSignalsPath },
   ];
   try {
-    createFiles(fileInfo);
+    await createFiles(fileInfo);
     console.log('File is with tags is created!');
   } catch (error) {
     console.error('File is not created!', error);

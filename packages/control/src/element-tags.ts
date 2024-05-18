@@ -1,4 +1,4 @@
-import { createElementFactory } from './base-component';
+import { createElementFactory } from './factories';
 
 export const html = createElementFactory('html');
 export const base = createElementFactory('base');
