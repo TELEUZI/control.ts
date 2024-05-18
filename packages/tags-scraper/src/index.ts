@@ -60,24 +60,24 @@ async function run() {
     return;
   }
   const tags = parseHTMLTags(html, tagsSelector);
-  const content = createElementsFileContent(tags);
-  const componentsContent = createElementsFileContent(tags, '$');
-  const componentName = 'component-tags.ts';
-  const elementTagsContent = `export * from '@control.ts/control/element-tags';`;
-  const elementTagsName = 'element-tags.ts';
-  const packagesControlPath = 'packages/control/src/';
-  const packagesMinPath = 'packages/min/src/';
-  const packagesSignalsPath = 'packages/signals/src/';
+  const elementTagsfileContent = createElementsFileContent(tags);
+  const componentsTagsfileContent = createElementsFileContent(tags, '$');
+  const componentTagsfileName = 'component-tags.ts';
+  const elementTagsFileContent = `export * from '@control.ts/control/element-tags';`;
+  const elementTagsfileName = 'element-tags.ts';
+  const controlPackagePath = 'packages/control/src/';
+  const minPackagePath = 'packages/min/src/';
+  const signalsPackagePath = 'packages/signals/src/';
 
-  const fileInfo = [
-    { content: content, name: elementTagsName, path: packagesControlPath },
-    { content: componentsContent, name: componentName, path: packagesMinPath },
-    { content: componentsContent, name: componentName, path: packagesSignalsPath },
-    { content: elementTagsContent, name: elementTagsName, path: packagesMinPath },
-    { content: elementTagsContent, name: elementTagsName, path: packagesSignalsPath },
+  const filesInfo = [
+    { content: elementTagsfileContent, name: elementTagsfileName, path: controlPackagePath },
+    { content: componentsTagsfileContent, name: componentTagsfileName, path: minPackagePath },
+    { content: componentsTagsfileContent, name: componentTagsfileName, path: signalsPackagePath },
+    { content: elementTagsFileContent, name: elementTagsfileName, path: minPackagePath },
+    { content: elementTagsFileContent, name: elementTagsfileName, path: signalsPackagePath },
   ];
   try {
-    await createFiles(fileInfo);
+    await createFiles(filesInfo);
     console.log('File is with tags is created!');
   } catch (error) {
     console.error('File is not created!', error);
