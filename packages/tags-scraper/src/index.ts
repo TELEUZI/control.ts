@@ -34,7 +34,7 @@ function parseHTMLTags(body: string, tag: string) {
 
 function createElementsFileContent(tags: string[], additionalCharacter: string = '') {
   return `
-  import { createElementFactory$ } from './factories';
+  import { createElementFactory${additionalCharacter} } from './factories';
 
   ${tags
     .map((tag) => tag.slice(1, -1))
@@ -66,12 +66,13 @@ async function run() {
   const elementTagsContent = `export * from '@control.ts/control/element-tags';`;
   const elementTagsName = 'element-tags.ts';
   const packagesControlPath = 'packages/control/src/';
-  const packagesMinPath = 'packages/min/src';
-  const packagesSignalsPath = 'packages/signals/src';
+  const packagesMinPath = 'packages/min/src/';
+  const packagesSignalsPath = 'packages/signals/src/';
 
   const fileInfo = [
     { content: content, name: elementTagsName, path: packagesControlPath },
     { content: componentsContent, name: componentName, path: packagesMinPath },
+    { content: componentsContent, name: componentName, path: packagesSignalsPath },
     { content: elementTagsContent, name: elementTagsName, path: packagesMinPath },
     { content: elementTagsContent, name: elementTagsName, path: packagesSignalsPath },
   ];
