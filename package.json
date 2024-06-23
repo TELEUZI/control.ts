@@ -15,7 +15,6 @@
     "version-packages": "changeset version",
     "release": "pnpm run build && changeset publish"
   },
-  "type": "module",
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
     "@commitlint/cli": "^18.6.1",
