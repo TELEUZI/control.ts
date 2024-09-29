@@ -1,7 +1,7 @@
 {
   "name": "@control.ts/control",
   "description": "Heart of the library: base class for abstraction from HTML. It provides a way to create and manage components.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Yauheni Tsurankou <ikk.pott@gmail.com> (https://github.com/TELEUZI)",
   "repository": {
     "directory": "packages/control",
@@ -24,12 +24,12 @@
     "@control.ts/eslint-config": "workspace:*",
     "@control.ts/typescript-config": "workspace:*",
     "@types/eslint": "^8.56.1",
-    "@vitest/coverage-v8": "^1.2.2",
-    "eslint": "^8.56.0",
-    "jsdom": "^24.0.0",
-    "typescript": "^5.3.3",
-    "vite": "^4.5.3",
-    "vitest": "^1.2.2"
+    "@vitest/coverage-v8": "^2.1.1",
+    "eslint": "^8.57.0",
+    "jsdom": "^25.0.1",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.8",
+    "vitest": "^2.1.1"
   },
   "exports": {
     ".": {

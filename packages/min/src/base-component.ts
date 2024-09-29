@@ -11,7 +11,9 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
 
   constructor(p: ComponentProps<T>, ...children: BaseComponentChild[]) {
     super();
-    p.txt && (p.textContent = p.txt);
+    if (p.txt) {
+      p.textContent = p.txt;
+    }
     const node = document.createElement(p.tag ?? 'div') as T;
     this._node = Object.assign(node, p);
     if (p.style) {
