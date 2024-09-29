@@ -1,5 +1,13 @@
 # @control.ts/storybook
 
+## 0.0.7
+
+### Patch Changes
+
+- f2cba67: Update deps
+- Updated dependencies [f2cba67]
+  - @control.ts/design-system@0.0.7
+
 ## 0.0.6
 
 ### Patch Changes
