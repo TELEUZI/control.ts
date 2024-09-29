@@ -1,5 +1,11 @@
 # @control.ts/storybook
 
+## 0.0.8
+
+### Patch Changes
+
+- @control.ts/design-system@0.0.8
+
 ## 0.0.7
 
 ### Patch Changes
