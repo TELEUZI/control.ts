@@ -8,7 +8,7 @@ FROM base AS builder
 COPY package.json .
 COPY pnpm-lock.yaml .
 COPY . .
-RUN pnpm install -g turbo@2.1.2 && turbo --version &&  turbo prune --docker @control.ts/storybook
+RUN pnpm install -g turbo@2.1.2 && turbo prune --docker @control.ts/storybook
 
 FROM base AS installer
 COPY --from=builder /control.ts/out/json/ .

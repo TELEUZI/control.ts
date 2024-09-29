@@ -1,4 +1,4 @@
-import type { ComponentChild, ComponentProps, Props } from '@control.ts/control';
+import type { ComponentChild, ComponentProps } from '@control.ts/control';
 import { Control, isNotNullable } from '@control.ts/control';
 
 export type BaseComponentProps<T extends HTMLElement = HTMLElement> = ComponentProps<T>;
@@ -43,8 +43,4 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
   public replaceWith(child: BaseComponent | HTMLElement | Comment): void {
     this._node.replaceWith(child instanceof BaseComponent ? child.node : child);
   }
-}
-
-export function bc$<T extends HTMLElement = HTMLElement>(props: Props<T>, ...children: BaseComponentChild[]) {
-  return new BaseComponent<T>(props, ...children);
 }

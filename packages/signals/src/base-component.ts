@@ -104,7 +104,3 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
     this._node.replaceWith(child instanceof BaseComponent ? child.node : child);
   }
 }
-
-export function bc$<T extends HTMLElement = HTMLElement>(props: Props<T>, ...children: BaseComponentChild[]) {
-  return new BaseComponent<T>(props, ...children);
-}
