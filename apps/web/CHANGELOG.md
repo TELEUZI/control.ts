@@ -1,5 +1,13 @@
 # @control.ts/movie-app
 
+## 0.0.5
+
+### Patch Changes
+
+- f2cba67: Update deps
+- Updated dependencies [f2cba67]
+  - @control.ts/signals@0.0.5
+
 ## 0.0.4
 
 ### Patch Changes
