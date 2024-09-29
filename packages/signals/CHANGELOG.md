@@ -1,5 +1,11 @@
 # @control.ts/min
 
+## 0.1.0
+
+### Minor Changes
+
+- 535429c: Deprecate bc$ function in favor of bcToFc
+
 ## 0.0.5
 
 ### Patch Changes

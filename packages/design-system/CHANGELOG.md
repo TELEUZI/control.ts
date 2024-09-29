@@ -1,5 +1,12 @@
 # @control.ts/design-system
 
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [535429c]
+  - @control.ts/min@0.2.0
+
 ## 0.0.7
 
 ### Patch Changes
