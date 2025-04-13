@@ -1,8 +1,8 @@
 import type { Props } from '@control.ts/control';
 import { Control, isNotNullable, type PossibleChild } from '@control.ts/control';
-import { Signal } from '@preact/signals-core';
+import type { Signal } from '@preact/signals-core';
 
-import { isSignal } from './utils';
+import { getValue$, isSignal } from './utils';
 
 export type SignalProps<T extends HTMLElement = HTMLElement> = {
   [K in keyof Props<T>]: Signal<Props<T>[K]> | Props<T>[K];
@@ -20,37 +20,33 @@ export type BaseComponentChild<T extends HTMLElement = HTMLElement> =
 export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<T> {
   protected _node: T;
 
-  public override children: BaseComponent[] = [];
+  protected children: BaseComponent[] = [];
+  private readonly readonlyProps = new Set(['tag', 'tagName', 'txt', 'style']);
 
-  constructor(p: SignalProps<T>, ...children: BaseComponentChild[]) {
+  constructor(props: SignalProps<T>, ...children: BaseComponentChild[]) {
     super();
-    this._node = document.createElement(p.tag ?? 'div') as T;
-    if (p.txt) {
-      p.textContent = p.txt;
+    this._node = document.createElement(props.tag ?? 'div') as T;
+    if (props.txt) {
+      props.textContent = props.txt;
     }
-    this.applyProps(p);
-    if (p.style) {
-      this.applyStyle(p.style);
+    this.applyProps(props);
+    if (props.style) {
+      this.applyStyle(props.style);
     }
     if (children.length > 0) {
       this.appendChildren(children);
     }
   }
 
-  private applyProps(p: SignalProps<T>) {
+  private applyProps(props: SignalProps<T>) {
     const node = this._node as Record<string, unknown>;
-    for (const [key, value] of Object.entries(p)) {
-      if (key === 'tag' || key === 'tagName' || key === 'txt' || key === 'style') {
+    for (const [key, value] of Object.entries(props)) {
+      if (this.readonlyProps.has(key)) {
         continue;
       }
+      node[key] = getValue$(value);
       if (isSignal(value)) {
-        const sub = value.subscribe((newValue) => {
-          node[key] = newValue;
-        });
-        this.subscriptions.push(sub);
-        node[key] = value.value;
-      } else {
-        node[key] = value;
+        this.subscriptions.push(value.subscribe((newValue) => (node[key] = newValue)));
       }
     }
   }
@@ -59,7 +55,9 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
     if (child instanceof BaseComponent) {
       this._node.append(child.node);
       this.children.push(child);
-    } else if (child instanceof Signal) {
+    } else if (child instanceof HTMLElement) {
+      this._node.append(child);
+    } else {
       const empty = document.createComment('comment');
       this._node.append(empty);
       let prevValue: PossibleChild<HTMLElement, BaseComponent> = null;
@@ -68,6 +66,7 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
           if (value !== null) {
             const isComponent = value instanceof BaseComponent;
             if (isComponent) {
+              // push to unsubscribe from children subs on destroy if needed
               this.children.push(value);
             }
             const node = isComponent ? value.node : value;
@@ -77,6 +76,7 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
               }
               prevValue.replaceWith(node);
             } else {
+              // if it is first rendering
               empty.replaceWith(node);
             }
             prevValue = value;
@@ -89,8 +89,6 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
           }
         }),
       );
-    } else {
-      this._node.append(child);
     }
   }
 
