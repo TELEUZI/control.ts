@@ -1,4 +1,4 @@
-import type { BaseComponent } from './base-component';
+import { BaseComponent } from './base-component';
 
 /**
  * Converts a class component to a functional component.
@@ -25,3 +25,5 @@ export const bcToFc =
   <T extends BaseComponent, A extends ReadonlyArray<unknown>>(bc: { new (...args: A): T }) =>
   (...args: A) =>
     new bc(...args);
+
+export const bc$ = bcToFc(BaseComponent);

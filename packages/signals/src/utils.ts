@@ -1,7 +1,7 @@
-import { Signal } from '@preact/signals-core';
+import type { Signal } from '@preact/signals-core';
 
-export function isSignal<T>(value: T | Signal<T>): value is Signal<T> {
-  return value instanceof Signal;
+export function isSignal<T>(value: unknown | Signal<T>): value is Signal<T> {
+  return value != null && typeof value === 'object' && 'subscribe' in value;
 }
 
 export function getValue$<T>(value: T | Signal<T>): T {
