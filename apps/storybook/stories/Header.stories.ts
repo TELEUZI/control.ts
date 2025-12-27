@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 
 import type { HeaderProps } from './Header';
 import { createHeader } from './Header';

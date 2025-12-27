@@ -1,5 +1,5 @@
 import { OptimizedImage, type OptimizedImageProps } from '@control.ts/design-system';
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 
 type Story = StoryObj<OptimizedImageProps>;
 
