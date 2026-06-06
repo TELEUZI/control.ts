@@ -9,7 +9,6 @@ type User = {
 export const createPage = () => {
   const article = document.createElement('article');
   let user: User | undefined;
-  let header: HTMLElement | null = null;
 
   const rerenderHeader = () => {
     const wrapper = document.getElementsByTagName('article')[0];
@@ -35,7 +34,7 @@ export const createPage = () => {
     return createHeader({ onLogin, onLogout, onCreateAccount, user });
   };
 
-  header = createHeaderElement();
+  const header = createHeaderElement();
   article.appendChild(header);
 
   const section = `

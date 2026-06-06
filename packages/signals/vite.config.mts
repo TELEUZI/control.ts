@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
 import { readdirSync } from 'fs';
+import { defineConfig } from 'vite';
 
 const components = readdirSync('src/', 'utf-8');
 const componentsEntries = components

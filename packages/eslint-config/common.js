@@ -1,70 +1,93 @@
-const { resolve } = require('node:path');
+import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
+import unicornPlugin from 'eslint-plugin-unicorn';
+import unusedImportsPlugin from 'eslint-plugin-unused-imports';
+import turboConfig from 'eslint-config-turbo/flat';
+import prettierPlugin from 'eslint-plugin-prettier';
+import prettierConfig from 'eslint-config-prettier';
+import globals from 'globals';
 
-const project = resolve(process.cwd(), 'tsconfig.json');
+export default tseslint.config(
+  // Global ignores
+  {
+    ignores: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/storybook-static/**',
+      '**/coverage/**',
+      '**/.*.js',
+      '**/.*.mjs',
+      '**/.*.cjs',
+      'packages/eslint-config/common.js',
+    ],
+  },
 
-/** @type {import("eslint").Linter.Config} */
-module.exports = {
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaVersion: 2021,
-    sourceType: 'module',
+  // Base JS configurations
+  js.configs.recommended,
+
+  // TypeScript configurations
+  ...tseslint.configs.recommended,
+
+  // Turborepo configurations
+  ...turboConfig,
+
+  // Custom base configuration
+  {
+    languageOptions: {
+      ecmaVersion: 2021,
+      sourceType: 'module',
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    plugins: {
+      'simple-import-sort': simpleImportSortPlugin,
+      'unused-imports': unusedImportsPlugin,
+      unicorn: unicornPlugin,
+      prettier: prettierPlugin,
+    },
+    rules: {
+      ...prettierConfig.rules,
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+      'unused-imports/no-unused-imports': 'warn',
+      'prettier/prettier': [
+        'error',
+        {
+          endOfLine: 'lf',
+        },
+      ],
+    },
   },
-  plugins: ['@typescript-eslint', 'unused-imports', 'simple-import-sort', 'prettier', 'unicorn'],
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
-  ],
-  env: {
-    browser: true,
-    node: true,
+
+  // Project-based TypeScript linting (only for source and story files)
+  {
+    files: ['**/src/**/*.ts', '**/src/**/*.tsx', '**/stories/**/*.ts', '**/stories/**/*.tsx'],
+    languageOptions: {
+      parserOptions: {
+        project: true,
+      },
+    },
   },
-  overrides: [
-    {
-      files: ['*.ts', '*.tsx', '*.js', '*.jsx'],
-      rules: {
-        'simple-import-sort/imports': 'error',
-        'simple-import-sort/exports': 'error',
-        'unused-imports/no-unused-imports': 'warn',
-        '@typescript-eslint/explicit-member-accessibility': [
-          'error',
-          {
-            overrides: {
-              accessors: 'explicit',
-              constructors: 'no-public',
-              properties: 'explicit',
-              parameterProperties: 'explicit',
-            },
+
+  // Syntactic TypeScript rules (applies to all TypeScript files)
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: {
+      '@typescript-eslint/explicit-member-accessibility': [
+        'error',
+        {
+          overrides: {
+            accessors: 'explicit',
+            constructors: 'no-public',
+            properties: 'explicit',
+            parameterProperties: 'explicit',
           },
-        ],
-      },
-    },
-    {
-      files: ['*.ts', '*.tsx', '*.js', '*.jsx', '*.html'],
-      rules: {
-        'prettier/prettier': [
-          'error',
-          {
-            endOfLine: 'lf',
-          },
-        ],
-        '@typescript-eslint/consistent-type-imports': 'error',
-      },
-    },
-  ],
-  settings: {
-    'import/resolver': {
-      typescript: {
-        project,
-      },
+        },
+      ],
+      '@typescript-eslint/consistent-type-imports': 'error',
     },
   },
-  ignorePatterns: [
-    // Ignore dotfiles
-    '.*.js',
-    'node_modules/',
-    'dist/',
-    'packages/eslint-config/common.js',
-  ],
-};
+);

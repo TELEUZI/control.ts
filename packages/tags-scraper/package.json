@@ -11,9 +11,8 @@
   "devDependencies": {
     "@control.ts/eslint-config": "workspace:*",
     "@control.ts/typescript-config": "workspace:*",
-    "@types/eslint": "^8.56.1",
     "@types/node": "^22.7.4",
-    "eslint": "^8.57.0",
+    "eslint": "^10.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
   },
