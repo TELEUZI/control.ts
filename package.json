@@ -16,27 +16,22 @@
     "release": "pnpm run build && changeset publish"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.29.8",
-    "@commitlint/cli": "^20.2.0",
+    "@changesets/cli": "^2.31.0",
+    "@commitlint/cli": "^21.0.2",
     "@types/eslint": "^8.56.1",
-    "@commitlint/config-conventional": "^20.2.0",
+    "@commitlint/config-conventional": "^21.0.2",
     "eslint": "^8.57.0",
     "@control.ts/eslint-config": "workspace:*",
     "@control.ts/prettier-config": "workspace:*",
     "@control.ts/typescript-config": "workspace:*",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.7",
-    "prettier": "^3.7.4",
+    "lint-staged": "^17.0.7",
+    "prettier": "^3.8.3",
     "pretty-quick": "^4.2.2",
-    "turbo": "2.7.2"
+    "turbo": "2.9.16"
   },
-  "packageManager": "pnpm@10.26.2",
+  "packageManager": "pnpm@11.5.2",
   "engines": {
     "node": ">=20"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
   }
 }

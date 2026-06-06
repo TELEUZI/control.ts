@@ -27,15 +27,15 @@
     "@control.ts/eslint-config": "workspace:*",
     "@control.ts/typescript-config": "workspace:*",
     "@types/eslint": "^8.56.1",
-    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/coverage-v8": "^4.1.8",
     "eslint": "^8.57.0",
-    "glob": "^11.0.0",
-    "jsdom": "^27.4.0",
-    "sass": "^1.79.4",
-    "typescript": "^5.9.3",
-    "vite": "^7.3.0",
+    "glob": "^13.0.6",
+    "jsdom": "^29.1.1",
+    "sass": "^1.100.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16",
     "vite-plugin-lib-inject-css": "^2.2.2",
-    "vitest": "^4.0.16"
+    "vitest": "^4.1.8"
   },
   "exports": {
     ".": {

@@ -27,12 +27,12 @@
     "@control.ts/eslint-config": "workspace:*",
     "@control.ts/typescript-config": "workspace:*",
     "@types/eslint": "^8.56.1",
-    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/coverage-v8": "^4.1.8",
     "eslint": "^8.57.0",
-    "jsdom": "^27.4.0",
-    "typescript": "^5.9.3",
-    "vite": "^7.3.0",
-    "vitest": "^4.0.16"
+    "jsdom": "^29.1.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16",
+    "vitest": "^4.1.8"
   },
   "exports": {
     ".": {
