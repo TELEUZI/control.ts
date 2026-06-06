@@ -73,3 +73,17 @@ To maintain codebase sanity, always adhere to the following rules:
 6. **Linting and Formatting:** All files must pass `pnpm run lint` and `pnpm run format` before they can be committed.
 
 ---
+
+## Agent skills
+
+### Issue tracker
+
+Issues and PRDs for this repository live as GitHub issues. Use the `gh` CLI for all operations. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The triage workflow uses the five canonical label strings matching the default values. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+The domain documentation utilizes a multi-context layout where a `CONTEXT-MAP.md` at the root points to context-specific `CONTEXT.md` files. See `docs/agents/domain.md`.
