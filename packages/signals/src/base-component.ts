@@ -1,5 +1,5 @@
 import type { Props } from '@control.ts/control';
-import { Control, isNotNullable, type PossibleChild } from '@control.ts/control';
+import { BaseComponent as CoreBaseComponent, type PossibleChild } from '@control.ts/control';
 import type { Signal } from '@preact/signals-core';
 
 import { getValue$, isSignal } from './utils';
@@ -17,31 +17,23 @@ export type BaseComponentChild<T extends HTMLElement = HTMLElement> =
   | PossibleChild<T, BaseComponent<T>>
   | Signal<BaseComponent<T> | null>;
 
-export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<T> {
-  protected _node: T;
+export class BaseComponent<T extends HTMLElement = HTMLElement> extends CoreBaseComponent<
+  T,
+  SignalProps<T>,
+  BaseComponentChild<HTMLElement>
+> {
+  private static readonly readonlyProps = new Set(['tag', 'tagName', 'txt', 'style']);
 
-  protected children: BaseComponent[] = [];
-  private readonly readonlyProps = new Set(['tag', 'tagName', 'txt', 'style']);
-
-  constructor(props: SignalProps<T>, ...children: BaseComponentChild[]) {
-    super();
-    this._node = document.createElement(props.tag ?? 'div') as T;
+  protected override applyProps(props: SignalProps<T>): void {
     if (props.txt) {
-      props.textContent = props.txt;
+      (props as unknown as Record<string, unknown>).textContent = props.txt;
     }
-    this.applyProps(props);
     if (props.style) {
       this.applyStyle(props.style);
     }
-    if (children.length > 0) {
-      this.appendChildren(children);
-    }
-  }
-
-  private applyProps(props: SignalProps<T>) {
     const node = this._node as Record<string, unknown>;
     for (const [key, value] of Object.entries(props)) {
-      if (this.readonlyProps.has(key)) {
+      if (BaseComponent.readonlyProps.has(key)) {
         continue;
       }
       node[key] = getValue$(value);
@@ -51,10 +43,11 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
     }
   }
 
-  public append(child: NonNullable<BaseComponentChild>): void {
+  public override append(child: NonNullable<BaseComponentChild<HTMLElement>>): void {
     if (child instanceof BaseComponent) {
       this._node.append(child.node);
       this.children.push(child);
+      child.parent = this;
     } else if (child instanceof HTMLElement) {
       this._node.append(child);
     } else {
@@ -68,11 +61,13 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
             if (isComponent) {
               // push to unsubscribe from children subs on destroy if needed
               this.children.push(value);
+              value.parent = this;
             }
             const node = isComponent ? value.node : value;
             if (prevValue !== null) {
               if (prevValue instanceof BaseComponent) {
                 this.children.push(prevValue);
+                prevValue.parent = this;
               }
               prevValue.replaceWith(node);
             } else {
@@ -90,15 +85,5 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
         }),
       );
     }
-  }
-
-  public appendChildren(children: BaseComponentChild[]): void {
-    children.filter(isNotNullable).forEach((el) => {
-      this.append(el);
-    });
-  }
-
-  public replaceWith(child: BaseComponent | HTMLElement | Comment): void {
-    this._node.replaceWith(child instanceof BaseComponent ? child.node : child);
   }
 }
