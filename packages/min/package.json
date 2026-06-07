@@ -68,7 +68,13 @@
       "types": "./dist/bc-to-fc.d.ts",
       "require": "./dist/bc-to-fc.js",
       "import": "./dist/bc-to-fc.mjs"
-    }
+    },
+    "./dnd": {
+      "types": "./dist/dnd/index.d.ts",
+      "require": "./dist/dnd.js",
+      "import": "./dist/dnd.mjs"
+    },
+    "./dnd/dnd.css": "./dist/dnd/dnd.css"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

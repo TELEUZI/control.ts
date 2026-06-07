@@ -1,0 +1,83 @@
+/* Drag and Drop Styles */
+
+/* Ghost element that follows the cursor during drag */
+.dragging-ghost {
+  position: fixed;
+  pointer-events: none;
+  opacity: 0.7;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Source element being dragged */
+.drag-source {
+  opacity: 0.4;
+  cursor: grabbing !important;
+}
+
+/* Drop indicator line */
+.drop-indicator {
+  position: relative;
+  background: #0066ff;
+  pointer-events: none;
+  z-index: 1000;
+  transition: all 0.15s ease;
+}
+
+/* Vertical drop indicator (for vertical lists) */
+.drop-indicator.vertical {
+  height: 2px;
+  width: 100%;
+  margin: -1px 0;
+}
+
+/* Horizontal drop indicator (for horizontal lists) */
+.drop-indicator.horizontal {
+  width: 2px;
+  height: 100%;
+  margin: 0 -1px;
+  display: inline-block;
+}
+
+/* Active drop zone */
+.drop-zone-active {
+  outline: 2px dashed #0066ff;
+  outline-offset: 2px;
+  background-color: rgba(0, 102, 255, 0.05);
+  transition: all 0.2s ease;
+}
+
+/* Drag handle styling (optional) */
+.drag-handle {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* Prevent text selection during drag */
+.dragging * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+/* Animation for drop */
+@keyframes dropAnimation {
+  0% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.drop-animation {
+  animation: dropAnimation 0.2s ease;
+}

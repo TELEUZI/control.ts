@@ -12,6 +12,9 @@ export default defineConfig({
       entry: componentsEntries,
       formats: ['cjs', 'es'],
     },
+    rollupOptions: {
+      external: [/^@control\.ts\//, /^@preact\/signals-core/],
+    },
     sourcemap: true,
     target: 'es2020',
   },
