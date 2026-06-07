@@ -1,0 +1,28 @@
+{
+  "name": "@control.ts/todo-list",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint --fix ./src"
+  },
+  "dependencies": {
+    "@control.ts/control": "workspace:*",
+    "@control.ts/signals": "workspace:*"
+  },
+  "devDependencies": {
+    "@control.ts/eslint-config": "workspace:*",
+    "@control.ts/typescript-config": "workspace:*",
+    "sass": "^1.79.4",
+    "typescript": "^5.6.2",
+    "vite": "^8.0.16",
+    "vite-tsconfig-paths": "^6.0.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
