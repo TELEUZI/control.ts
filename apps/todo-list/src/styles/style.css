@@ -1,0 +1,110 @@
+/* ===== Reset & Base ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg-page: #0f0f13;
+  --bg-card: #1a1a24;
+  --bg-card-hover: #1f1f2e;
+  --bg-column: #13131a;
+  --bg-input: #1e1e2c;
+
+  --accent-todo: #6366f1;
+  --accent-todo-glow: rgba(99, 102, 241, 0.25);
+  --accent-progress: #f59e0b;
+  --accent-progress-glow: rgba(245, 158, 11, 0.25);
+  --accent-done: #10b981;
+  --accent-done-glow: rgba(16, 185, 129, 0.25);
+  --accent-blocked: #ef4444;
+  --accent-blocked-glow: rgba(239, 68, 68, 0.25);
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #475569;
+
+  --border: rgba(255, 255, 255, 0.07);
+  --border-hover: rgba(255, 255, 255, 0.14);
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-drag: 0 16px 48px rgba(0, 0, 0, 0.6);
+
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+  --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html,
+body {
+  height: 100%;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== DND overrides ===== */
+.dragging-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.92;
+  box-shadow: var(--shadow-drag);
+  border-radius: var(--radius-md);
+  transform: rotate(2deg) scale(1.02);
+}
+
+.drag-source {
+  opacity: 0.35;
+  cursor: grabbing !important;
+}
+
+.drop-indicator {
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-todo), #818cf8);
+  border-radius: 3px;
+  margin: 4px 0;
+  pointer-events: none;
+  animation: pulse-indicator 1s ease-in-out infinite;
+}
+
+@keyframes pulse-indicator {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}

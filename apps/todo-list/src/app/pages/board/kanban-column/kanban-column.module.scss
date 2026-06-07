@@ -1,0 +1,84 @@
+.column {
+  width: 300px;
+  background: var(--bg-column);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.header {
+  padding: 16px 20px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.count {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  min-width: 24px;
+  text-align: center;
+}
+
+.cards {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 120px;
+  flex: 1;
+  transition:
+    background var(--transition),
+    outline var(--transition);
+
+  &:global(.drop-zone-active) {
+    outline: 2px dashed var(--accent-todo);
+    outline-offset: 4px;
+    border-radius: var(--radius-lg);
+    background-color: var(--accent-todo-glow);
+  }
+}
+
+.formWrapper {
+  margin: 4px 12px 12px;
+}
+
+.empty {
+  padding: 24px 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.6;
+  pointer-events: none;
+}
+
+.emptyIcon {
+  font-size: 28px;
+  margin-bottom: 8px;
+  opacity: 0.5;
+  display: block;
+}

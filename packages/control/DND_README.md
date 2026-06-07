@@ -1,6 +1,6 @@
 # Drag and Drop (DND) System
 
-A full-featured drag and drop system for the `@control.ts/min` package, providing intuitive component movement with parent tracking, visual feedback, and flexible configuration.
+A full-featured drag and drop system for the `@control.ts/control` package, providing intuitive component movement with parent tracking, visual feedback, and flexible configuration.
 
 ## Features
 
@@ -15,16 +15,16 @@ A full-featured drag and drop system for the `@control.ts/min` package, providin
 
 ## Installation
 
-The DND system is included in `@control.ts/min`. Simply import what you need:
+The DND system is included in `@control.ts/control`. Simply import what you need:
 
 ```typescript
-import { createDraggable, createDropZone, makeDraggable, makeDropZone, DragDropManager } from '@control.ts/min';
+import { createDraggable, createDropZone, makeDraggable, makeDropZone, DragDropManager } from '@control.ts/control/dnd';
 ```
 
 Don't forget to import the CSS:
 
 ```typescript
-import '@control.ts/min/dnd/dnd.css';
+import '@control.ts/control/dnd/dnd.css';
 ```
 
 ## Quick Start
@@ -32,7 +32,7 @@ import '@control.ts/min/dnd/dnd.css';
 ### Basic Sortable List
 
 ```typescript
-import { createDropZone, createDraggable } from '@control.ts/min';
+import { createDropZone, createDraggable } from '@control.ts/control/dnd';
 
 // Create a drop zone (container)
 const list = createDropZone(
@@ -227,7 +227,7 @@ const dropZone = makeDropZone(component, {
 Singleton that coordinates all drag and drop operations.
 
 ```typescript
-import { DragDropManager } from '@control.ts/min';
+import { DragDropManager } from '@control.ts/control/dnd';
 
 const manager = DragDropManager.getInstance();
 const currentDrag = manager.getCurrentDrag();
@@ -316,20 +316,10 @@ item.setDraggable(true);
 
 ## Running the Demo
 
-A complete interactive demo is available:
-
-```typescript
-import { runDndDemo } from '@control.ts/min/src/examples/dnd-demo';
-
-runDndDemo();
-```
-
-Or run it directly:
+A complete interactive demo is available in the `apps/todo-list` workspace application. Run it using:
 
 ```bash
-cd packages/min
-npm run dev
-# Open the demo HTML file
+pnpm --filter=@control.ts/todo-list dev
 ```
 
 ## Testing
@@ -337,8 +327,7 @@ npm run dev
 Run the DND tests:
 
 ```bash
-cd packages/min
-npm test src/tests/dnd.test.ts
+pnpm --filter=@control.ts/min test
 ```
 
 ## Browser Support
@@ -360,15 +349,15 @@ The DND system uses standard DOM APIs and works in all modern browsers:
 
 If you're coming from other DND libraries:
 
-| Feature            | SortableJS | react-beautiful-dnd | @control.ts/min |
-| ------------------ | ---------- | ------------------- | --------------- |
-| Parent tracking    | ❌         | ❌                  | ✅              |
-| Drag handles       | ✅         | ✅                  | ✅              |
-| Drop zones         | ✅         | ✅                  | ✅              |
-| Event hooks        | ✅         | ✅                  | ✅              |
-| TypeScript         | ⚠️         | ✅                  | ✅              |
-| Framework-agnostic | ✅         | ❌                  | ✅              |
-| Bundle size        | ~45KB      | ~35KB               | ~8KB            |
+| Feature            | SortableJS | react-beautiful-dnd | @control.ts/control |
+| ------------------ | ---------- | ------------------- | ------------------- |
+| Parent tracking    | ❌         | ❌                  | ✅                  |
+| Drag handles       | ✅         | ✅                  | ✅                  |
+| Drop zones         | ✅         | ✅                  | ✅                  |
+| Event hooks        | ✅         | ✅                  | ✅                  |
+| TypeScript         | ⚠️         | ✅                  | ✅                  |
+| Framework-agnostic | ✅         | ❌                  | ✅                  |
+| Bundle size        | ~45KB      | ~35KB               | ~8KB                |
 
 ## Troubleshooting
 

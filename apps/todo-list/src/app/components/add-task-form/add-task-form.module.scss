@@ -1,0 +1,104 @@
+.form {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: none;
+
+  &.visible {
+    display: block;
+  }
+}
+
+.textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: 13px;
+  outline: none;
+  resize: none;
+  min-height: 72px;
+
+  &::placeholder {
+    color: var(--text-muted);
+  }
+}
+
+.footer {
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.select {
+  background: var(--bg-column);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-family: var(--font);
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.confirm {
+  margin-left: auto;
+  padding: 5px 14px;
+  background: var(--accent-todo);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: opacity var(--transition);
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.cancel {
+  padding: 5px 10px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: border-color var(--transition);
+
+  &:hover {
+    border-color: var(--border-hover);
+    color: var(--text-secondary);
+  }
+}
+
+.trigger {
+  width: 100%;
+  padding: 10px 14px;
+  background: transparent;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-family: var(--font);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all var(--transition);
+
+  &:hover {
+    border-color: var(--accent-todo);
+    color: var(--accent-todo);
+    background: var(--accent-todo-glow);
+  }
+}

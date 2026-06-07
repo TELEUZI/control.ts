@@ -87,6 +87,9 @@ importers:
 
   apps/todo-list:
     dependencies:
+      '@control.ts/control':
+        specifier: workspace:*
+        version: link:../../packages/control
       '@control.ts/signals':
         specifier: workspace:*
         version: link:../../packages/signals
