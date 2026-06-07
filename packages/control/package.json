@@ -55,7 +55,13 @@
       "types": "./dist/element-tags.d.ts",
       "require": "./dist/element-tags.js",
       "import": "./dist/element-tags.mjs"
-    }
+    },
+    "./dnd": {
+      "types": "./dist/dnd/index.d.ts",
+      "require": "./dist/dnd.js",
+      "import": "./dist/dnd.mjs"
+    },
+    "./dnd/dnd.css": "./dist/dnd/dnd.css"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

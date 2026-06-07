@@ -1,4 +1,4 @@
-import type { Props } from '@control.ts/control';
+import type { AnyBaseComponent, Props } from '@control.ts/control';
 import { BaseComponent as CoreBaseComponent, type PossibleChild } from '@control.ts/control';
 import type { Signal } from '@preact/signals-core';
 
@@ -8,13 +8,15 @@ export type SignalProps<T extends HTMLElement = HTMLElement> = {
   [K in keyof Props<T>]: Signal<Props<T>[K]> | Props<T>[K];
 } & {
   tag?: keyof HTMLElementTagNameMap;
-  style?: Partial<CSSStyleDeclaration>;
+  // Allow plain style OR a reactive signal that resolves to Partial<CSSStyleDeclaration>
+  style?: Partial<CSSStyleDeclaration> | Signal<Partial<CSSStyleDeclaration> | undefined>;
 };
 
 export type BaseComponentProps<T extends HTMLElement = HTMLElement> = SignalProps<T>;
 
 export type BaseComponentChild<T extends HTMLElement = HTMLElement> =
   | PossibleChild<T, BaseComponent<T>>
+  | PossibleChild<T, AnyBaseComponent>
   | Signal<BaseComponent<T> | null>;
 
 export class BaseComponent<T extends HTMLElement = HTMLElement> extends CoreBaseComponent<
@@ -29,7 +31,18 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends CoreBase
       (props as unknown as Record<string, unknown>).textContent = props.txt;
     }
     if (props.style) {
-      this.applyStyle(props.style);
+      if (isSignal(props.style)) {
+        // Reactive style — apply initial value then subscribe
+        const initial = props.style.value;
+        if (initial) this.applyStyle(initial);
+        this.subscriptions.push(
+          props.style.subscribe((newStyle) => {
+            if (newStyle) this.applyStyle(newStyle);
+          }),
+        );
+      } else {
+        this.applyStyle(props.style);
+      }
     }
     const node = this._node as Record<string, unknown>;
     for (const [key, value] of Object.entries(props)) {
@@ -44,13 +57,18 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends CoreBase
   }
 
   public override append(child: NonNullable<BaseComponentChild<HTMLElement>>): void {
-    if (child instanceof BaseComponent) {
+    if (child == null) {
+      return;
+    }
+    if (child instanceof CoreBaseComponent) {
+      // Covers both signals.BaseComponent and any other CoreBaseComponent subclass
+      // (e.g. DraggableComponent, DropZoneComponent from DND)
       this._node.append(child.node);
       this.children.push(child);
       child.parent = this;
     } else if (child instanceof HTMLElement) {
       this._node.append(child);
-    } else {
+    } else if (isSignal(child)) {
       const empty = document.createComment('comment');
       this._node.append(empty);
       let prevValue: PossibleChild<HTMLElement, BaseComponent> = null;
@@ -85,5 +103,9 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends CoreBase
         }),
       );
     }
+  }
+
+  public override appendChildren(children: NonNullable<BaseComponentChild<HTMLElement>>[]): void {
+    children.forEach((child) => this.append(child));
   }
 }

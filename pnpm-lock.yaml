@@ -87,6 +87,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@control.ts/min':
+        specifier: workspace:*
+        version: link:../../packages/min
       '@control.ts/signals':
         specifier: workspace:*
         version: link:../../packages/signals
@@ -6933,6 +6936,16 @@ snapshots:
       globrex: 0.1.2
       tsconfck: 3.1.6(typescript@5.9.3)
       vite: 7.3.5(@types/node@22.19.19)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.100.0)(yaml@2.9.0)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
+  vite-tsconfig-paths@6.1.1(typescript@5.9.3)(vite@8.0.16(@types/node@22.19.19)(esbuild@0.27.7)(jiti@2.6.1)(sass@1.100.0)(yaml@2.9.0)):
+    dependencies:
+      debug: 4.4.3
+      globrex: 0.1.2
+      tsconfck: 3.1.6(typescript@5.9.3)
+      vite: 8.0.16(@types/node@22.19.19)(esbuild@0.27.7)(jiti@2.6.1)(sass@1.100.0)(yaml@2.9.0)
     transitivePeerDependencies:
       - supports-color
       - typescript

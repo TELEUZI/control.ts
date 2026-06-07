@@ -175,7 +175,7 @@ describe('BaseComponent', () => {
     const child2 = null;
     const component = new BaseComponent({ txt: 'Hello', tag: 'div' });
 
-    component.appendChildren([child1, child2]);
+    component.appendChildren([child1, child2 as unknown as BaseComponent]);
 
     expect(component.node.children).toContain(child1);
     expect(component.node.children).not.toContain(child2);
