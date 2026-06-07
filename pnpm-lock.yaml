@@ -85,11 +85,33 @@ importers:
         specifier: ^8.0.16
         version: 8.0.16(@types/node@22.19.19)(esbuild@0.27.7)(jiti@2.6.1)(sass@1.100.0)(yaml@2.9.0)
 
+  apps/todo-list:
+    dependencies:
+      '@control.ts/signals':
+        specifier: workspace:*
+        version: link:../../packages/signals
+    devDependencies:
+      '@control.ts/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@control.ts/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      sass:
+        specifier: ^1.79.4
+        version: 1.100.0
+      typescript:
+        specifier: ^5.6.2
+        version: 5.9.3
+      vite:
+        specifier: ^8.0.16
+        version: 8.0.16(@types/node@22.19.19)(esbuild@0.27.7)(jiti@2.6.1)(sass@1.100.0)(yaml@2.9.0)
+      vite-tsconfig-paths:
+        specifier: ^6.0.3
+        version: 6.1.1(typescript@5.9.3)(vite@8.0.16(@types/node@22.19.19)(esbuild@0.27.7)(jiti@2.6.1)(sass@1.100.0)(yaml@2.9.0))
+
   apps/web:
     dependencies:
-      '@control.ts/min':
-        specifier: workspace:*
-        version: link:../../packages/min
       '@control.ts/signals':
         specifier: workspace:*
         version: link:../../packages/signals
