@@ -15,21 +15,16 @@
     "@control.ts/design-system": "workspace:*"
   },
   "devDependencies": {
-    "@chromatic-com/storybook": "^2.0.2",
+    "@chromatic-com/storybook": "^5.2.1",
     "@control.ts/eslint-config": "workspace:*",
     "@control.ts/prettier-config": "workspace:*",
     "@control.ts/typescript-config": "workspace:*",
-    "@storybook/addon-essentials": "^8.3.4",
-    "@storybook/addon-interactions": "^8.3.4",
-    "@storybook/addon-links": "^8.3.4",
-    "@storybook/addon-mdx-gfm": "^8.3.4",
-    "@storybook/blocks": "^8.3.4",
-    "@storybook/html": "^8.3.4",
-    "@storybook/html-vite": "^8.3.4",
-    "@storybook/test": "^8.3.4",
-    "serve": "^14.2.3",
-    "storybook": "^8.3.4",
-    "typescript": "^5.6.2",
-    "vite": "5.4.8"
+    "@storybook/addon-links": "10.4.2",
+    "@storybook/html-vite": "10.4.2",
+    "serve": "^14.2.6",
+    "storybook": "10.4.2",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16",
+    "@storybook/addon-docs": "10.4.2"
   }
 }

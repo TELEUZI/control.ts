@@ -5,7 +5,7 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "lint:fix": "eslint . --fix --ext=ts",
+    "lint:fix": "eslint . --fix",
     "test": "turbo test",
     "test:run": "turbo test:run",
     "coverage": "turbo coverage",
@@ -16,28 +16,21 @@
     "release": "pnpm run build && changeset publish"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.8",
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.5.0",
+    "@changesets/cli": "^2.31.0",
+    "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
+    "eslint": "^10.4.1",
     "@control.ts/eslint-config": "workspace:*",
     "@control.ts/prettier-config": "workspace:*",
     "@control.ts/typescript-config": "workspace:*",
-    "husky": "^9.1.6",
-    "lint-staged": "^15.2.10",
-    "prettier": "^3.3.3",
-    "pretty-quick": "^4.0.0",
-    "turbo": "2.1.2"
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.7",
+    "prettier": "^3.8.3",
+    "pretty-quick": "^4.2.2",
+    "turbo": "2.9.16"
   },
-  "packageManager": "pnpm@9.1.0",
+  "packageManager": "pnpm@11.5.2",
   "engines": {
     "node": ">=20"
-  },
-  "pnpm": {
-    "overrides": {
-      "braces@<3.0.3": ">=3.0.3",
-      "ws@>=8.0.0 <8.17.1": ">=8.17.1",
-      "micromatch@<4.0.8": ">=4.0.8",
-      "path-to-regexp@>=2.0.0 <3.3.0": ">=3.3.0"
-    }
   }
 }

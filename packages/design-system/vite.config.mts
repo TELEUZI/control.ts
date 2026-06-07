@@ -1,6 +1,6 @@
+import { readdirSync } from 'fs';
 import { defineConfig } from 'vite';
 import { libInjectCss } from 'vite-plugin-lib-inject-css';
-import { readdirSync } from 'fs';
 
 const components = readdirSync('src/', { recursive: true, encoding: 'utf-8' });
 const componentsEntries = components

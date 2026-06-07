@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
 import { readdirSync } from 'fs';
+import { defineConfig } from 'vite';
 
 const components = readdirSync('src/', 'utf-8');
 const componentsEntries = components
@@ -11,6 +11,9 @@ export default defineConfig({
     lib: {
       entry: componentsEntries,
       formats: ['cjs', 'es'],
+    },
+    rollupOptions: {
+      external: [/^@control\.ts\//, /^@preact\/signals-core/],
     },
     sourcemap: true,
     target: 'es2020',

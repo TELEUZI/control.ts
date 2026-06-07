@@ -1,5 +1,5 @@
 import { Button, type ButtonProps } from '@control.ts/design-system';
-import type { Meta, StoryObj } from '@storybook/html';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {

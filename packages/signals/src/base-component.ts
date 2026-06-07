@@ -1,65 +1,74 @@
-import type { Props } from '@control.ts/control';
-import { Control, isNotNullable, type PossibleChild } from '@control.ts/control';
-import { Signal } from '@preact/signals-core';
+import type { AnyBaseComponent, Props } from '@control.ts/control';
+import { BaseComponent as CoreBaseComponent, type PossibleChild } from '@control.ts/control';
+import type { Signal } from '@preact/signals-core';
 
-import { isSignal } from './utils';
+import { getValue$, isSignal } from './utils';
 
 export type SignalProps<T extends HTMLElement = HTMLElement> = {
   [K in keyof Props<T>]: Signal<Props<T>[K]> | Props<T>[K];
 } & {
   tag?: keyof HTMLElementTagNameMap;
-  style?: Partial<CSSStyleDeclaration>;
+  // Allow plain style OR a reactive signal that resolves to Partial<CSSStyleDeclaration>
+  style?: Partial<CSSStyleDeclaration> | Signal<Partial<CSSStyleDeclaration> | undefined>;
 };
 
 export type BaseComponentProps<T extends HTMLElement = HTMLElement> = SignalProps<T>;
 
 export type BaseComponentChild<T extends HTMLElement = HTMLElement> =
   | PossibleChild<T, BaseComponent<T>>
+  | PossibleChild<T, AnyBaseComponent>
   | Signal<BaseComponent<T> | null>;
 
-export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<T> {
-  protected _node: T;
+export class BaseComponent<T extends HTMLElement = HTMLElement> extends CoreBaseComponent<
+  T,
+  SignalProps<T>,
+  BaseComponentChild<HTMLElement>
+> {
+  private static readonly readonlyProps = new Set(['tag', 'tagName', 'txt', 'style']);
 
-  public override children: BaseComponent[] = [];
-
-  constructor(p: SignalProps<T>, ...children: BaseComponentChild[]) {
-    super();
-    this._node = document.createElement(p.tag ?? 'div') as T;
-    if (p.txt) {
-      p.textContent = p.txt;
+  protected override applyProps(props: SignalProps<T>): void {
+    if (props.txt) {
+      (props as unknown as Record<string, unknown>).textContent = props.txt;
     }
-    this.applyProps(p);
-    if (p.style) {
-      this.applyStyle(p.style);
+    if (props.style) {
+      if (isSignal(props.style)) {
+        // Reactive style — apply initial value then subscribe
+        const initial = props.style.value;
+        if (initial) this.applyStyle(initial);
+        this.subscriptions.push(
+          props.style.subscribe((newStyle) => {
+            if (newStyle) this.applyStyle(newStyle);
+          }),
+        );
+      } else {
+        this.applyStyle(props.style);
+      }
     }
-    if (children.length > 0) {
-      this.appendChildren(children);
-    }
-  }
-
-  private applyProps(p: SignalProps<T>) {
     const node = this._node as Record<string, unknown>;
-    for (const [key, value] of Object.entries(p)) {
-      if (key === 'tag' || key === 'tagName' || key === 'txt' || key === 'style') {
+    for (const [key, value] of Object.entries(props)) {
+      if (BaseComponent.readonlyProps.has(key)) {
         continue;
       }
+      node[key] = getValue$(value);
       if (isSignal(value)) {
-        const sub = value.subscribe((newValue) => {
-          node[key] = newValue;
-        });
-        this.subscriptions.push(sub);
-        node[key] = value.value;
-      } else {
-        node[key] = value;
+        this.subscriptions.push(value.subscribe((newValue) => (node[key] = newValue)));
       }
     }
   }
 
-  public append(child: NonNullable<BaseComponentChild>): void {
-    if (child instanceof BaseComponent) {
+  public override append(child: NonNullable<BaseComponentChild<HTMLElement>>): void {
+    if (child == null) {
+      return;
+    }
+    if (child instanceof CoreBaseComponent) {
+      // Covers both signals.BaseComponent and any other CoreBaseComponent subclass
+      // (e.g. DraggableComponent, DropZoneComponent from DND)
       this._node.append(child.node);
       this.children.push(child);
-    } else if (child instanceof Signal) {
+      child.parent = this;
+    } else if (child instanceof HTMLElement) {
+      this._node.append(child);
+    } else if (isSignal(child)) {
       const empty = document.createComment('comment');
       this._node.append(empty);
       let prevValue: PossibleChild<HTMLElement, BaseComponent> = null;
@@ -68,15 +77,19 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
           if (value !== null) {
             const isComponent = value instanceof BaseComponent;
             if (isComponent) {
+              // push to unsubscribe from children subs on destroy if needed
               this.children.push(value);
+              value.parent = this;
             }
             const node = isComponent ? value.node : value;
             if (prevValue !== null) {
               if (prevValue instanceof BaseComponent) {
                 this.children.push(prevValue);
+                prevValue.parent = this;
               }
               prevValue.replaceWith(node);
             } else {
+              // if it is first rendering
               empty.replaceWith(node);
             }
             prevValue = value;
@@ -89,18 +102,10 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends Control<
           }
         }),
       );
-    } else {
-      this._node.append(child);
     }
   }
 
-  public appendChildren(children: BaseComponentChild[]): void {
-    children.filter(isNotNullable).forEach((el) => {
-      this.append(el);
-    });
-  }
-
-  public replaceWith(child: BaseComponent | HTMLElement | Comment): void {
-    this._node.replaceWith(child instanceof BaseComponent ? child.node : child);
+  public override appendChildren(children: NonNullable<BaseComponentChild<HTMLElement>>[]): void {
+    children.forEach((child) => this.append(child));
   }
 }

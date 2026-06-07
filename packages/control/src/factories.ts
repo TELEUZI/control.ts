@@ -1,4 +1,4 @@
-import type { Props } from './control';
+import type { Control, Props } from './control';
 
 export type TagName = keyof HTMLElementTagNameMap;
 export type ElementFnProps<T extends HTMLElement = HTMLElement> = Omit<Props<T>, 'tag'>;
@@ -24,23 +24,40 @@ export function createElementFactoryWithCustomProps<T extends TagName, P extends
     createElement<T>(tag, { ...props, ...customProps }, children);
 }
 
-// TODO: implement common logic for min/signals fabrics and remove code duplicates
+export interface ElementFactory<
+  Props extends Record<string, unknown>,
+  Child,
+  CompClass extends Control<HTMLElement>,
+  Tag extends TagName,
+> {
+  <T extends HTMLElement = HTMLElementTagNameMap[Tag]>(
+    props: Props & { tag?: Tag },
+    ...children: Child[]
+  ): CompClass & { node: T };
+}
 
-// export function createElementFactoryFabric<
-//   T extends {
-//     new <C extends Control<V>, V extends HTMLElement>(...args: any[]): C;
-//   },
-//   BaseComponentProps,
-//   BaseComponentChild,
-// >(bs: T) {
-//   function createElement$<Tag extends TagName, C extends Control<HTMLElementTagNameMap[Tag]>>(
-//     props: BaseComponentProps & { tag: Tag },
-//     children?: BaseComponentChild[],
-//   ) {
-//     return new bs<C, HTMLElementTagNameMap[Tag]>(props, ...(children ?? []));
-//   }
-//   return <Tag extends TagName, C extends Control<HTMLElementTagNameMap[Tag]>>(tag: Tag) => {
-//     return (props: BaseComponentProps, ...children: BaseComponentChild[]) =>
-//       createElement$<Tag, C>({ tag, ...props }, children);
-//   };
-// }
+export type ComponentConstructor<
+  Props extends Record<string, unknown>,
+  Child,
+  CompClass extends Control<HTMLElement>,
+> = {
+  new (props: Props & { tag?: TagName }, ...children: Child[]): CompClass;
+};
+
+export function createElementFactoryFabric<
+  BaseComponentProps extends Record<string, unknown>,
+  BaseComponentChild,
+  BaseComponentClass extends Control<HTMLElement>,
+>(Constructor: ComponentConstructor<BaseComponentProps, BaseComponentChild, BaseComponentClass>) {
+  return <Tag extends TagName>(tag: Tag) => {
+    return <T extends HTMLElement = HTMLElementTagNameMap[Tag]>(
+      props: Omit<BaseComponentProps, 'tag'> & { tag?: Tag },
+      ...children: BaseComponentChild[]
+    ): BaseComponentClass & { node: T } => {
+      return new Constructor(
+        { tag, ...props } as unknown as BaseComponentProps,
+        ...children,
+      ) as unknown as BaseComponentClass & { node: T };
+    };
+  };
+}

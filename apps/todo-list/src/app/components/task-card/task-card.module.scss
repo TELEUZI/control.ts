@@ -1,0 +1,148 @@
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  cursor: grab;
+  user-select: none;
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    border-radius: 3px 0 0 3px;
+  }
+
+  &:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-card);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    cursor: grabbing;
+    transform: scale(0.98);
+  }
+}
+
+.priorityHigh::before {
+  background: var(--accent-blocked);
+}
+.priorityMedium::before {
+  background: var(--accent-progress);
+}
+.priorityLow::before {
+  background: var(--accent-done);
+}
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.taskId {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  flex: 1;
+  line-height: 1.45;
+}
+
+.handle {
+  cursor: grab;
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 2px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  line-height: 1;
+  transition: color var(--transition);
+  user-select: none;
+
+  .card:hover & {
+    color: var(--text-secondary);
+  }
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.tagFeature {
+  background: rgba(99, 102, 241, 0.18);
+  color: #818cf8;
+}
+.tagBug {
+  background: rgba(239, 68, 68, 0.18);
+  color: #f87171;
+}
+.tagDocs {
+  background: rgba(245, 158, 11, 0.18);
+  color: #fbbf24;
+}
+.tagRefactor {
+  background: rgba(16, 185, 129, 0.18);
+  color: #34d399;
+}
+.tagTest {
+  background: rgba(139, 92, 246, 0.18);
+  color: #a78bfa;
+}
+.tagChore {
+  background: rgba(100, 116, 139, 0.18);
+  color: #94a3b8;
+}
+
+.priority {
+  font-size: 10px;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted);
+}
+
+.priorityDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
