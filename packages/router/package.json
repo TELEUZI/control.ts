@@ -1,0 +1,26 @@
+{
+  "name": "@control.ts/router",
+  "version": "0.0.1",
+  "description": "Minimal router for control.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "vite build && tsc --project tsconfig.build.json --declaration --emitDeclarationOnly --outDir dist",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint --fix ./src"
+  },
+  "devDependencies": {
+    "@control.ts/eslint-config": "workspace:*",
+    "@control.ts/typescript-config": "workspace:*",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16"
+  }
+}
