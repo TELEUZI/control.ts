@@ -9,4 +9,14 @@ export default defineConfig({
       localsConvention: 'camelCase',
     },
   },
+  ssr: {
+    noExternal: ['@control.ts/signals', '@control.ts/control'],
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
 });

@@ -2,7 +2,8 @@ import type { Props } from '@control.ts/control';
 import { BaseComponent as CoreBaseComponent, type PossibleChild } from '@control.ts/control';
 import type { Signal } from '@preact/signals-core';
 
-import { getValue$, isSignal } from './utils';
+import { hydrateOrSerializeSignal } from './hydrate';
+import { getValue$, isSignal, isVirtualNode } from './utils';
 
 export type SignalProps<T extends HTMLElement = HTMLElement> = {
   [K in keyof Props<T>]: Signal<Props<T>[K]> | Props<T>[K];
@@ -38,6 +39,7 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends CoreBase
       }
       node[key] = getValue$(value);
       if (isSignal(value)) {
+        hydrateOrSerializeSignal(value as Signal<unknown>);
         this.subscriptions.push(value.subscribe((newValue) => (node[key] = newValue)));
       }
     }
@@ -48,14 +50,41 @@ export class BaseComponent<T extends HTMLElement = HTMLElement> extends CoreBase
       this._node.append(child.node);
       this.children.push(child);
       child.parent = this;
-    } else if (child instanceof HTMLElement) {
+    } else if ((typeof HTMLElement !== 'undefined' && child instanceof HTMLElement) || isVirtualNode(child)) {
       this._node.append(child);
     } else {
-      const empty = document.createComment('comment');
+      // In SSR we don't have document.createComment, we use a VirtualNode
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let empty: any;
+      if (typeof document !== 'undefined') {
+        empty = document.createComment('comment');
+      } else {
+        // Need to require VirtualNode or just use an object that behaves like it
+        empty = {
+          nodeType: 8,
+          tagName: 'COMMENT',
+          outerHTML: '<!--comment-->',
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          replaceWith: function (node: any) {
+            if (this.parentNode) {
+              const idx = this.parentNode.children.indexOf(this);
+              if (idx !== -1) {
+                this.parentNode.children.splice(idx, 1, node);
+                if (node && typeof node === 'object') node.parentNode = this.parentNode;
+              }
+            }
+          },
+        };
+      }
       this._node.append(empty);
       let prevValue: PossibleChild<HTMLElement, BaseComponent> = null;
+      // At this point, child must be a Signal
+      const signalChild = child;
+
+      hydrateOrSerializeSignal(signalChild);
+
       this.subscriptions.push(
-        child.subscribe((value) => {
+        signalChild.subscribe((value) => {
           if (value !== null) {
             const isComponent = value instanceof BaseComponent;
             if (isComponent) {

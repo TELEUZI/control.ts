@@ -1,0 +1,9 @@
+{
+  "extends": "@control.ts/typescript-config/base.json",
+  "compilerOptions": {
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    "rootDir": "./src"
+  },
+  "include": ["src"]
+}

@@ -1,11 +1,19 @@
 import type { Control, Props } from './control';
+import { isServerEnvironment } from './ssr';
+import { VirtualNode } from './virtual-node';
 
 export type TagName = keyof HTMLElementTagNameMap;
 export type ElementFnProps<T extends HTMLElement = HTMLElement> = Omit<Props<T>, 'tag'>;
 
-export function createElement<T extends TagName>(tag: T, props: ElementFnProps, children: HTMLElement[]) {
-  const node = document.createElement(tag);
-  props.textContent = props.txt;
+export function createElement<T extends TagName>(
+  tag: T,
+  props: ElementFnProps,
+  children: HTMLElement[],
+): HTMLElementTagNameMap[T] {
+  const node = (isServerEnvironment() ? new VirtualNode(tag) : document.createElement(tag)) as HTMLElementTagNameMap[T];
+  if (props.txt) {
+    node.textContent = props.txt;
+  }
   Object.assign(node, props);
   node.append(...children);
   return node;

@@ -22,12 +22,24 @@ class MovieListPageComponent extends BaseComponent {
   private readonly favoriteOnly = $(false);
   private readonly movies: Signal<MovieWithFavorite[]> = $([]);
 
-  constructor(private readonly movieService: MovieService) {
+  constructor(
+    private readonly movieService: MovieService,
+    initialData?: { data: MovieWithFavorite[]; hasMore: boolean },
+  ) {
     super({ className: styles.movieListPage });
+
+    // If we have initial data (from SSR), use it
+    if (initialData) {
+      this.movies.value = initialData.data;
+      this.hasMore.value = initialData.hasMore;
+    }
+
     effect(() => {
-      this.paginationOptions.page = 1;
-      this.movies.value = [];
-      this.loadMovies(this.favoriteOnly.value);
+      // Only fetch if we don't already have data
+      if (this.movies.value?.length === 0) {
+        this.paginationOptions.page = 1;
+        this.loadMovies(this.favoriteOnly.value);
+      }
     });
 
     this.appendChildren([
@@ -105,4 +117,8 @@ class MovieListPageComponent extends BaseComponent {
   }
 }
 
-export const MovieListPage = (movieService: MovieService) => new MovieListPageComponent(movieService);
+export const MovieListPage = (
+  movieService: MovieService,
+  initialData?: { movies: MovieWithFavorite[]; hasMore: boolean },
+  // @ts-expect-error SSR
+) => new MovieListPageComponent(movieService, initialData);

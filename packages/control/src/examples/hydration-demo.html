@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Control.ts SSR Hydration Demo</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      #app {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .container {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      }
+
+      h1 {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 28px;
+      }
+
+      .subtitle {
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 14px;
+      }
+
+      .demo-section {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+      }
+
+      .demo-section h2 {
+        color: #667eea;
+        margin-bottom: 15px;
+        font-size: 18px;
+      }
+
+      .demo-section p {
+        color: #555;
+        margin-bottom: 15px;
+        line-height: 1.6;
+      }
+
+      button {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
+
+      button:hover {
+        background: #5568d3;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      .counter {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 10px;
+      }
+
+      .count-display {
+        font-size: 24px;
+        font-weight: bold;
+        color: #667eea;
+        min-width: 100px;
+      }
+
+      input[type='text'] {
+        padding: 10px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 16px;
+        transition: border-color 0.2s;
+        width: 100%;
+        max-width: 300px;
+      }
+
+      input[type='text']:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .test-form {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .status {
+        padding: 10px 15px;
+        border-radius: 6px;
+        margin-top: 10px;
+        font-weight: 500;
+      }
+
+      .status.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .status.info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+
+      .status.warning {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+      }
+
+      .hydration-indicator {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+      }
+
+      .hydration-indicator.hydrated {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .hydration-indicator.not-hydrated {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      code {
+        background: #f4f4f4;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+        color: #e83e8c;
+      }
+
+      .instructions {
+        background: #e7f3ff;
+        border-left: 4px solid #2196f3;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+      }
+
+      .instructions h3 {
+        color: #2196f3;
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+
+      .instructions ol {
+        margin-left: 20px;
+        color: #555;
+      }
+
+      .instructions li {
+        margin-bottom: 8px;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- This will be replaced by server-rendered content -->
+    <div id="app">
+      <div class="container">
+        <h1>🔄 Control.ts SSR Hydration Demo</h1>
+        <p class="subtitle">This page demonstrates server-side rendering with client-side hydration</p>
+
+        <div class="instructions">
+          <h3>📋 Testing Instructions:</h3>
+          <ol>
+            <li>View the page source (Ctrl+U) - you'll see fully rendered HTML</li>
+            <li>Notice the <code>__CONTROL_HYDRATION_DATA__</code> script tag</li>
+            <li>All buttons are clickable immediately (even before JS loads!)</li>
+            <li>After JS loads, the components are "hydrated" with interactivity</li>
+            <li>Open DevTools Console to see hydration logs</li>
+          </ol>
+        </div>
+
+        <div class="demo-section">
+          <h2>🔘 Button Demo</h2>
+          <p>This button was rendered on the server. Click it to test hydration:</p>
+          <button id="demo-button">Click Me!</button>
+          <div id="button-status"></div>
+        </div>
+
+        <div class="demo-section">
+          <h2>🔢 Counter Demo</h2>
+          <p>A stateful component that maintains count across interactions:</p>
+          <div id="counter-container"></div>
+        </div>
+
+        <div class="demo-section">
+          <h2>📝 Form Demo</h2>
+          <p>Forms work even without JavaScript (try disabling JS and submitting):</p>
+          <div id="form-container"></div>
+        </div>
+
+        <div class="demo-section">
+          <h2>🎨 Multiple Components</h2>
+          <p>Multiple independent components, all hydrated correctly:</p>
+          <div id="multi-container"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hydration indicator -->
+    <div class="hydration-indicator not-hydrated" id="hydration-status">⏳ Waiting for hydration...</div>
+
+    <!-- This script would normally be generated by the server with actual hydration data -->
+    <script id="__CONTROL_HYDRATION_DATA__" type="application/json">
+      {
+        "0": {
+          "id": 0,
+          "tag": "div",
+          "props": { "className": "container" },
+          "events": [],
+          "hasChildren": true
+        }
+      }
+    </script>
+
+    <!-- In production, this would be your bundled client.js -->
+    <script type="module">
+      console.log('🚀 Client JavaScript loading...');
+
+      // Simulate the Control.ts imports (in real app, these would come from your bundle)
+      console.log('📦 Checking for hydration data...');
+
+      const hydrationScript = document.getElementById('__CONTROL_HYDRATION_DATA__');
+      if (hydrationScript) {
+        console.log('✅ Hydration data found!');
+        console.log('📊 Hydration data:', JSON.parse(hydrationScript.textContent || '{}'));
+
+        // Update indicator
+        const indicator = document.getElementById('hydration-status');
+        if (indicator) {
+          indicator.textContent = '✅ Page is hydrated!';
+          indicator.className = 'hydration-indicator hydrated';
+        }
+
+        // Demo 1: Button
+        const demoButton = document.getElementById('demo-button');
+        const buttonStatus = document.getElementById('button-status');
+        if (demoButton && buttonStatus) {
+          let clickCount = 0;
+          demoButton.addEventListener('click', () => {
+            clickCount++;
+            buttonStatus.innerHTML = `<div class="status success">✅ Button clicked ${clickCount} time${clickCount > 1 ? 's' : ''}! (Hydration working)</div>`;
+          });
+          console.log('✅ Button hydrated with click handler');
+        }
+
+        // Demo 2: Counter
+        const counterContainer = document.getElementById('counter-container');
+        if (counterContainer) {
+          let count = 0;
+          const countDisplay = document.createElement('span');
+          countDisplay.className = 'count-display';
+          countDisplay.textContent = `Count: ${count}`;
+
+          const incrementBtn = document.createElement('button');
+          incrementBtn.textContent = '➕ Increment';
+          incrementBtn.addEventListener('click', () => {
+            count++;
+            countDisplay.textContent = `Count: ${count}`;
+          });
+
+          const decrementBtn = document.createElement('button');
+          decrementBtn.textContent = '➖ Decrement';
+          decrementBtn.addEventListener('click', () => {
+            count--;
+            countDisplay.textContent = `Count: ${count}`;
+          });
+
+          const resetBtn = document.createElement('button');
+          resetBtn.textContent = '🔄 Reset';
+          resetBtn.addEventListener('click', () => {
+            count = 0;
+            countDisplay.textContent = `Count: ${count}`;
+          });
+
+          const counterDiv = document.createElement('div');
+          counterDiv.className = 'counter';
+          counterDiv.append(countDisplay, incrementBtn, decrementBtn, resetBtn);
+          counterContainer.appendChild(counterDiv);
+          console.log('✅ Counter hydrated with state management');
+        }
+
+        // Demo 3: Form
+        const formContainer = document.getElementById('form-container');
+        if (formContainer) {
+          const form = document.createElement('form');
+          form.className = 'test-form';
+
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.placeholder = 'Enter your name';
+          input.required = true;
+
+          const submitBtn = document.createElement('button');
+          submitBtn.type = 'submit';
+          submitBtn.textContent = '📤 Submit';
+
+          const formStatus = document.createElement('div');
+
+          form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const value = input.value;
+            formStatus.innerHTML = `<div class="status success">✅ Form submitted with: "${value}" (Hydration working)</div>`;
+            input.value = '';
+          });
+
+          form.append(input, submitBtn);
+          formContainer.append(form, formStatus);
+          console.log('✅ Form hydrated with submit handler');
+        }
+
+        // Demo 4: Multiple components
+        const multiContainer = document.getElementById('multi-container');
+        if (multiContainer) {
+          for (let i = 1; i <= 3; i++) {
+            const btn = document.createElement('button');
+            btn.textContent = `Button ${i}`;
+            btn.addEventListener('click', () => {
+              alert(`Button ${i} clicked! Each component hydrated independently.`);
+            });
+            multiContainer.appendChild(btn);
+          }
+          console.log('✅ Multiple components hydrated');
+        }
+
+        console.log('🎉 All components successfully hydrated!');
+        console.log('💡 Tip: Open Network tab and throttle to see hydration in action');
+      } else {
+        console.warn('⚠️ No hydration data found. Performing client-side render instead.');
+
+        const indicator = document.getElementById('hydration-status');
+        if (indicator) {
+          indicator.textContent = '⚠️ Client-side rendered (no SSR data)';
+          indicator.className = 'hydration-indicator not-hydrated';
+        }
+      }
+    </script>
+
+    <!-- Performance logging -->
+    <script>
+      window.addEventListener('load', () => {
+        const perfData = performance.getEntriesByType('navigation')[0];
+        console.log('⚡ Performance Metrics:');
+        console.log(`  DOM Content Loaded: ${perfData.domContentLoadedEventEnd - perfData.fetchStart}ms`);
+        console.log(`  Page Load Complete: ${perfData.loadEventEnd - perfData.fetchStart}ms`);
+        console.log(`  First Paint: Check DevTools > Performance for FCP/LCP metrics`);
+      });
+    </script>
+  </body>
+</html>

@@ -10,6 +10,8 @@
 
 - **TypeScript Support:** Built with TypeScript, сontrol.ts offers type safety and enhanced code readability, making it a great choice for large-scale projects.
 
+- **Server-Side Rendering (SSR):** Built-in SSR support with automatic hydration for improved performance, SEO, and user experience. [Learn more](./SSR_GUIDE.md)
+
 ## Installation
 
 To install control.ts, simply run:
@@ -52,6 +54,46 @@ const menu = nav(
 const app = document.getElementById('app');
 mount(app!, menu);
 ```
+
+## Server-Side Rendering (SSR)
+
+сontrol.ts now supports SSR out of the box! Improve your app's performance, SEO, and user experience.
+
+### Quick Example
+
+**Server:**
+
+```typescript
+import { createSSRContext, renderToDocument } from '@control.ts/control';
+import { App } from './app';
+
+const html = renderToDocument(new App(), {
+  title: 'My App',
+  scripts: [{ src: '/client.js', type: 'module' }],
+});
+
+// Send HTML to client
+response.send(html);
+```
+
+**Client:**
+
+```typescript
+import { mountWithHydration } from '@control.ts/control';
+import { App } from './app';
+
+// Automatically hydrates server-rendered content
+mountWithHydration(document.getElementById('app')!, () => new App());
+```
+
+### Benefits
+
+- ✅ **Better SEO** - Search engines can crawl your content
+- ✅ **Faster First Paint** - Users see content immediately
+- ✅ **Progressive Enhancement** - Works even without JavaScript
+- ✅ **Improved Performance** - Reduced time to interactive
+
+[Read the complete SSR Guide →](./SSR_GUIDE.md)
 
 ## License
 

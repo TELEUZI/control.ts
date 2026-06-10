@@ -1,5 +1,7 @@
 import { Control, type PossibleChild, type Props } from './control';
+import { isServerEnvironment } from './ssr';
 import { isNotNullable } from './utils';
+import { VirtualNode } from './virtual-node';
 
 export type AnyBaseComponent = BaseComponent<HTMLElement, Record<string, unknown>, unknown>;
 
@@ -15,7 +17,9 @@ export class BaseComponent<
 
   constructor(p: P, ...children: C[]) {
     super();
-    this._node = document.createElement(p.tag ?? 'div') as T;
+    this._node = (isServerEnvironment()
+      ? new VirtualNode(p.tag ?? 'div')
+      : document.createElement(p.tag ?? 'div')) as unknown as T;
     this.applyProps(p);
     if (children.length > 0) {
       this.appendChildren(children);

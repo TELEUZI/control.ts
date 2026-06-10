@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "lib": ["ES2020"],
+    "moduleResolution": "bundler",
+    "outDir": "dist/server-runner",
+    "rootDir": "server",
+    "declaration": false,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "allowImportingTsExtensions": false,
+    "types": ["node"]
+  },
+  "include": ["server/start.ts", "server/build-static.ts"],
+  "exclude": ["node_modules", "dist", "server/entry-server.ts", "server/scss-loader.js"]
+}

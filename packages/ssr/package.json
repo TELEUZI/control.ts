@@ -1,0 +1,75 @@
+{
+  "name": "@control.ts/ssr",
+  "description": "Meta-framework package for easily adding Server-Side Rendering (SSR), Caching, Routing, and Static Site Generation (SSG) to your control.ts applications.",
+  "version": "0.1.0",
+  "author": "Yauheni Tsurankou <ikk.pott@gmail.com> (https://github.com/TELEUZI)",
+  "repository": {
+    "directory": "packages/ssr",
+    "type": "git",
+    "url": "https://github.com/TELEUZI/control.ts.git"
+  },
+  "scripts": {
+    "dev": "tsc --noEmit --watch",
+    "build": "vite build && tsc --project tsconfig.build.json --declaration --emitDeclarationOnly --outDir dist",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "coverage": "vitest run --coverage",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint --fix ./src",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@control.ts/eslint-config": "workspace:*",
+    "@control.ts/typescript-config": "workspace:*",
+    "@types/compression": "^1.7.2",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.24",
+    "eslint": "^10.4.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16",
+    "vitest": "^4.1.8"
+  },
+  "dependencies": {
+    "@control.ts/control": "workspace:*",
+    "@control.ts/router": "workspace:*",
+    "compression": "^1.7.4",
+    "express": "^4.18.2",
+    "sirv": "^2.0.4"
+  },
+  "peerDependencies": {
+    "vite": "^8.0.16"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "require": "./dist/server.js",
+      "import": "./dist/server.mjs"
+    },
+    "./prerender": {
+      "types": "./dist/prerender.d.ts",
+      "require": "./dist/prerender.js",
+      "import": "./dist/prerender.mjs"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "require": "./dist/client.js",
+      "import": "./dist/client.mjs"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "license": "MIT",
+  "files": [
+    "dist/**"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

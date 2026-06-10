@@ -15,9 +15,6 @@ interface Props {
 
 class MovieInfoComponent extends BaseComponent {
   constructor({ movie, onMakeFavorite, isFavorite }: Props) {
-    isFavorite.subscribe((value) => {
-      console.log('isFavorite', value);
-    });
     super(
       { className: styles.info },
       ImageWithPlaceholder({

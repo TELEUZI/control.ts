@@ -10,11 +10,17 @@ export class StorageService<T> {
   }
 
   public saveData<K extends keyof T>(key: K, data: T[K]): void {
+    // Skip on server-side
+    if (typeof window === 'undefined') return;
+
     const storageKey = this.getStorageKey(key.toString());
     localStorage.setItem(storageKey, JSON.stringify(data));
   }
 
   public getData<K extends keyof T>(key: K): T[K] | null {
+    // Return null on server-side
+    if (typeof window === 'undefined') return null;
+
     const storageKey = this.getStorageKey(key.toString());
     const data = localStorage.getItem(storageKey);
     return data ? JSON.parse(data) : null;
