@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BaseComponent } from '../base-component';
 import { clearHydrationData, hydrate, isHydrationAvailable, mountWithHydration } from '../hydrate';
-import { clearSSRContext, createSSRContext, serializeHydrationData } from '../ssr';
+import { clearSSRContext, createSSRContext, renderComponentToString, serializeHydrationData } from '../ssr';
 
 // Test components
 class ButtonComponent extends BaseComponent {
@@ -80,10 +80,14 @@ describe('Min Hydration Tests', () => {
 
     it('should hydrate a simple component', () => {
       createSSRContext();
-      renderToString('button', { className: 'test-button', textContent: 'Click Me' }, []);
+      const serverHtml = renderToString('button', { className: 'test-button', textContent: 'Click Me' }, []);
 
       const hydrationScript = serializeHydrationData();
       clearSSRContext();
+
+      const container = document.createElement('div');
+      container.innerHTML = serverHtml;
+      document.body.appendChild(container);
 
       const scriptElement = document.createElement('script');
       scriptElement.id = '__CONTROL_HYDRATION_DATA__';
@@ -93,11 +97,12 @@ describe('Min Hydration Tests', () => {
       document.body.appendChild(scriptElement);
 
       const button = new ButtonComponent('Click Me');
-      hydrate(document.body, button);
+      hydrate(container, button);
 
       expect(button.node.textContent).toBe('Click Me');
       expect(button.node.className).toContain('test-button');
 
+      document.body.removeChild(container);
       document.body.removeChild(scriptElement);
     });
   });
@@ -162,10 +167,14 @@ describe('Min Hydration Tests', () => {
   describe('Nested Components', () => {
     it('should hydrate nested components', () => {
       createSSRContext();
-      renderToString('div', { className: 'counter' }, []);
+      const serverHtml = renderComponentToString(new CounterComponent(0));
 
       const hydrationScript = serializeHydrationData();
       clearSSRContext();
+
+      const container = document.createElement('div');
+      container.innerHTML = serverHtml;
+      document.body.appendChild(container);
 
       const scriptElement = document.createElement('script');
       scriptElement.id = '__CONTROL_HYDRATION_DATA__';
@@ -175,11 +184,12 @@ describe('Min Hydration Tests', () => {
       document.body.appendChild(scriptElement);
 
       const counter = new CounterComponent(0);
-      hydrate(document.body, counter);
+      hydrate(container, counter);
 
       expect(counter.node.querySelector('.count-display')).toBeTruthy();
       expect(counter.node.querySelector('button')).toBeTruthy();
 
+      document.body.removeChild(container);
       document.body.removeChild(scriptElement);
     });
   });

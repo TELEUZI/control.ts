@@ -8,7 +8,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BaseComponent } from '../base-component';
 import { clearHydrationData, hydrate, isHydrationAvailable, loadSignalState, mountWithHydration } from '../hydrate';
-import { clearSSRContext, createSSRContext, serializeHydrationData, serializeSignalState } from '../ssr';
+import {
+  clearSSRContext,
+  createSSRContext,
+  renderComponentToString,
+  serializeHydrationData,
+  serializeSignalState,
+} from '../ssr';
 
 // Test components
 class ButtonComponent extends BaseComponent {
@@ -81,10 +87,14 @@ describe('Signals Hydration Tests', () => {
 
     it('should hydrate a simple component', () => {
       createSSRContext();
-      renderToString('button', { className: 'test-button', textContent: 'Click Me' }, []);
+      const serverHtml = renderToString('button', { className: 'test-button', textContent: 'Click Me' }, []);
 
       const hydrationScript = serializeHydrationData();
       clearSSRContext();
+
+      const container = document.createElement('div');
+      container.innerHTML = serverHtml;
+      document.body.appendChild(container);
 
       const scriptElement = document.createElement('script');
       scriptElement.id = '__CONTROL_HYDRATION_DATA__';
@@ -94,11 +104,12 @@ describe('Signals Hydration Tests', () => {
       document.body.appendChild(scriptElement);
 
       const button = new ButtonComponent('Click Me');
-      hydrate(document.body, button);
+      hydrate(container, button);
 
       expect(button.node.textContent).toBe('Click Me');
       expect(button.node.className).toContain('test-button');
 
+      document.body.removeChild(container);
       document.body.removeChild(scriptElement);
     });
   });
@@ -286,7 +297,7 @@ describe('Signals Hydration Tests', () => {
       const state = { count: count.value };
       const stateJson = serializeSignalState(state);
 
-      renderToString('div', { className: 'counter' }, []);
+      const serverHtml = renderComponentToString(new ReactiveCounter(42));
       const hydrationScript = serializeHydrationData();
 
       clearSSRContext();
@@ -311,6 +322,7 @@ describe('Signals Hydration Tests', () => {
 
       const root = document.createElement('div');
       root.id = 'app';
+      root.innerHTML = serverHtml;
       document.body.appendChild(root);
 
       mountWithHydration(root, () => new ReactiveCounter(loadedState?.count || 0));
