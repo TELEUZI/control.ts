@@ -15,7 +15,8 @@ async function bootstrap() {
   const resolved = await resolveRoute(routes, urlPath);
 
   if (resolved) {
-    const app = PageWrapper(resolved.route.component(resolved.data));
+    const rootComponent = await resolved.route.component(resolved.data);
+    const app = PageWrapper(rootComponent);
     mount(document.querySelector<HTMLDivElement>('#app')!, app);
   } else {
     document.querySelector('#app')!.innerHTML = '<h1>404 Not Found</h1>';

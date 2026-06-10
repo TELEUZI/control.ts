@@ -20,6 +20,7 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "paths": {
       "@components/*": ["src/app/components/*"],
       "@pages/*": ["src/app/pages/*"],

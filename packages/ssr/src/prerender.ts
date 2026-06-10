@@ -39,7 +39,7 @@ export async function buildStaticPages(options: BuildStaticPagesOptions) {
   }
 
   // Iterate over static routes
-  for (const route of routes as Route[]) {
+  for (const route of routes as Route<unknown>[]) {
     // Skip dynamic routes like /:id
     if (route.path.includes(':')) {
       console.log(`⏭️  Skipping dynamic route: ${route.path}`);

@@ -6,7 +6,7 @@ export const Outlet = (initialComponent?: BaseComponent | null) => {
   const currentComponent = $<BaseComponent | null>(initialComponent || null);
 
   if (typeof window !== 'undefined') {
-    clientRouter.onNavigate((newComponent) => {
+    clientRouter.onNavigate<BaseComponent>((newComponent) => {
       currentComponent.value = newComponent;
     });
   }

@@ -6,7 +6,7 @@ import { renderToString } from '@control.ts/control';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BaseComponent } from '../base-component';
-import { clearHydrationData, hydrateComponent, isHydrationAvailable, mountWithHydration } from '../hydrate';
+import { clearHydrationData, hydrate, isHydrationAvailable, mountWithHydration } from '../hydrate';
 import { clearSSRContext, createSSRContext, serializeHydrationData } from '../ssr';
 
 // Test components
@@ -93,7 +93,7 @@ describe('Min Hydration Tests', () => {
       document.body.appendChild(scriptElement);
 
       const button = new ButtonComponent('Click Me');
-      hydrateComponent(button);
+      hydrate(document.body, button);
 
       expect(button.node.textContent).toBe('Click Me');
       expect(button.node.className).toContain('test-button');
@@ -175,7 +175,7 @@ describe('Min Hydration Tests', () => {
       document.body.appendChild(scriptElement);
 
       const counter = new CounterComponent(0);
-      hydrateComponent(counter);
+      hydrate(document.body, counter);
 
       expect(counter.node.querySelector('.count-display')).toBeTruthy();
       expect(counter.node.querySelector('button')).toBeTruthy();

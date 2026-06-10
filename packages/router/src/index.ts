@@ -1,16 +1,36 @@
+import type { Control } from '@control.ts/control';
+
 export type RouteLoaderArgs = {
   url: URL;
   params: Record<string, string>;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Route<TData = any> = {
+export type Route<TData = unknown, TComponent extends Control = Control> = {
   path: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  component: (data: TData) => any | Promise<any>;
+  component: (data: TData) => TComponent | Promise<TComponent>;
   loader?: (args: RouteLoaderArgs) => Promise<TData> | TData;
   revalidate?: number; // Cache duration in seconds (ISR)
 };
+
+export function defineRoute<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TLoader extends ((args: RouteLoaderArgs) => any) | undefined = undefined,
+  TComponent extends Control = Control,
+>(route: {
+  path: string;
+  loader?: TLoader;
+  component: (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data: TLoader extends (...args: any[]) => infer R ? Awaited<R> : undefined,
+  ) => TComponent | Promise<TComponent>;
+  revalidate?: number;
+}): Route<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TLoader extends (...args: any[]) => infer R ? Awaited<R> : undefined,
+  TComponent
+> {
+  return route;
+}
 
 export function matchRoute(path: string, urlPath: string): { matches: boolean; params: Record<string, string> } {
   const pathSegments = path.split('/').filter(Boolean);
@@ -38,7 +58,11 @@ export function matchRoute(path: string, urlPath: string): { matches: boolean; p
   return { matches: true, params };
 }
 
-export async function resolveRoute(routes: Route[], urlString: string) {
+export async function resolveRoute<TComponent extends Control = Control>(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  routes: Route<any, TComponent>[],
+  urlString: string,
+) {
   const url = new URL(urlString, 'http://localhost');
   const path = url.pathname;
 

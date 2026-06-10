@@ -6,6 +6,7 @@
 
 import './styles/style.css';
 
+import type { BaseComponent } from '@control.ts/signals';
 import { mountWithHydration } from '@control.ts/signals';
 import { hydrateClient } from '@control.ts/ssr/client';
 
@@ -15,7 +16,7 @@ import { routes } from './app/routes';
 // The Vite environment sets BASE_URL, injected during build.
 const base = import.meta.env?.BASE_URL || '/movie-app/';
 
-hydrateClient({
+hydrateClient<BaseComponent>({
   routes,
   base,
   mount: (component) =>

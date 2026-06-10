@@ -5,8 +5,14 @@
  */
 
 import type { HydrationData } from '@control.ts/control';
-import { clearHydrationData, isHydrationAvailable, loadHydrationData, mountWithHydration } from '@control.ts/control';
+import {
+  clearHydrationData,
+  hydrate,
+  isHydrationAvailable,
+  loadHydrationData,
+  mountWithHydration,
+} from '@control.ts/control';
 
 // Re-export base hydration utilities
-export { clearHydrationData, isHydrationAvailable, loadHydrationData, mountWithHydration };
+export { clearHydrationData, hydrate, isHydrationAvailable, loadHydrationData, mountWithHydration };
 export type { HydrationData };

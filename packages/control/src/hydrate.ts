@@ -132,15 +132,19 @@ export function hydrate(rootElement: HTMLElement, app: Control | (() => Control)
 
   if (typeof app === 'function') {
     // Intercept event listeners during client tree generation
+    type ListenerObj = {
+      type: string;
+      listener: EventListenerOrEventListenerObject;
+      options?: boolean | AddEventListenerOptions;
+    };
     HTMLElement.prototype.addEventListener = function (
+      this: HTMLElement & { __listeners?: ListenerObj[] },
       type: string,
       listener: EventListenerOrEventListenerObject,
       options?: boolean | AddEventListenerOptions,
     ) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (this as any).__listeners = (this as any).__listeners || [];
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (this as any).__listeners.push({ type, listener, options });
+      this.__listeners ||= [];
+      this.__listeners.push({ type, listener, options });
       return originalAddEventListener.call(this, type, listener, options);
     };
     try {

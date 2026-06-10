@@ -29,15 +29,15 @@ apps/web/
 
 ## Available Scripts
 
-| Script                 | Description                              |
-| ---------------------- | ---------------------------------------- |
-| `pnpm run dev`         | Start regular Vite dev server (SPA mode) |
-| `pnpm run dev:ssr`     | **Start SSR dev server with Express**    |
-| `pnpm run build`       | Build regular SPA version                |
-| `pnpm run build:client`| Build client bundle for SSR              |
-| `pnpm run build:server`| Build server bundle for SSR              |
-| `pnpm run build:ssr`   | **Build both client and server for SSR** |
-| `pnpm run preview:ssr` | Preview production SSR build             |
+| Script                  | Description                              |
+| ----------------------- | ---------------------------------------- |
+| `pnpm run dev`          | Start regular Vite dev server (SPA mode) |
+| `pnpm run dev:ssr`      | **Start SSR dev server with Express**    |
+| `pnpm run build`        | Build regular SPA version                |
+| `pnpm run build:client` | Build client bundle for SSR              |
+| `pnpm run build:server` | Build server bundle for SSR              |
+| `pnpm run build:ssr`    | **Build both client and server for SSR** |
+| `pnpm run preview:ssr`  | Preview production SSR build             |
 
 ## How It Works
 
@@ -143,17 +143,21 @@ CMD ["pnpm", "run", "preview:ssr"]
 ## Troubleshooting
 
 ### Hydration Mismatch
+
 **Problem**: Console warnings about hydration mismatch.
 **Solution**: Ensure server and client render the same initial HTML. Verify that:
+
 - No browser-only code runs during SSR.
 - No random IDs or timestamps exist in the initial render.
 - All data is serializable.
 
 ### Styles Not Loading
+
 **Problem**: CSS not applied on server-rendered content.
 **Solution**: Make sure CSS imports are in the entry files (`entry-client.ts`) and Vite processes them correctly.
 
 ### Module Not Found
+
 **Problem**: Server can't find modules during SSR.
 **Solution**: Check that you ran `pnpm install` from the workspace root. Ensure `vite.config.ts` has the correct `ssr.noExternal` configuration for `@control.ts` packages.
 

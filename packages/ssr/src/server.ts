@@ -1,7 +1,9 @@
 import express from 'express';
 import fs from 'fs';
+import type { ServerResponse } from 'http';
 import path from 'path';
 import { pathToFileURL } from 'url';
+import type { ViteDevServer } from 'vite';
 
 export type SSRServerOptions = {
   port: number;
@@ -43,8 +45,7 @@ export async function startSSRServer(options: SSRServerOptions) {
     app.use('/src/assets', express.static(path.resolve(rootDir, 'src/assets')));
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let vite: any;
+  let vite: ViteDevServer;
   if (!isProduction) {
     const { createServer } = await import('vite');
     vite = await createServer({
@@ -62,8 +63,7 @@ export async function startSSRServer(options: SSRServerOptions) {
       base,
       sirv(path.resolve(rootDir, staticAssetsPath), {
         extensions: [],
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setHeaders: (res: any, pathname: string) => {
+        setHeaders: (res: ServerResponse, pathname: string) => {
           if (pathname.endsWith('.js')) {
             res.setHeader('Content-Type', 'application/javascript');
           } else if (pathname.endsWith('.css')) {
@@ -87,8 +87,7 @@ export async function startSSRServer(options: SSRServerOptions) {
       const url = req.originalUrl.replace(base, '');
 
       let template: string;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let render: any;
+      let render: (url: string) => Promise<{ html: string; head: string; revalidate?: number }>;
 
       if (!isProduction) {
         template = fs.readFileSync(path.resolve(rootDir, templateDevPath), 'utf-8');
@@ -138,12 +137,11 @@ export async function startSSRServer(options: SSRServerOptions) {
 
       res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
     } catch (e: unknown) {
+      const err = e instanceof Error ? e : new Error(String(e));
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      !isProduction && vite?.ssrFixStacktrace(e);
-      // @ts-expect-error server
-      console.error(e.stack);
-      // @ts-expect-error server
-      res.status(500).end(e.stack);
+      !isProduction && vite?.ssrFixStacktrace(err);
+      console.error(err.stack);
+      res.status(500).end(err.stack);
     }
   });
 

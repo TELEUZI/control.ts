@@ -285,6 +285,9 @@ importers:
 
   packages/router:
     devDependencies:
+      '@control.ts/control':
+        specifier: workspace:*
+        version: link:../control
       '@control.ts/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config

@@ -69,6 +69,13 @@ export function clearSSRContext(): void {
 }
 
 /**
+ * Helper to check if we should use SSR mode
+ */
+export function shouldUseSSR(): boolean {
+  return isServerEnvironment() || getSSRContext()?.isServer === true;
+}
+
+/**
  * Generate next component ID
  */
 export function nextComponentId(): number {
@@ -198,6 +205,20 @@ export function renderControlToString(component: Control): string {
   return component.toString();
 }
 
+export interface IRenderableComponent {
+  node: { outerHTML?: string } | HTMLElement | null;
+}
+
+/**
+ * Render BaseComponent to HTML string
+ */
+export function renderComponentToString(component: IRenderableComponent): string {
+  if (component.node && 'outerHTML' in component.node && component.node.outerHTML) {
+    return component.node.outerHTML;
+  }
+  return '';
+}
+
 /**
  * Serialize hydration data to JSON script tag
  */
@@ -293,6 +314,17 @@ export function renderToDocument(
   clearSSRContext();
 
   return html;
+}
+
+/**
+ * Render complete HTML document with BaseComponent
+ */
+export function renderComponentToDocument(
+  app: IRenderableComponent | string,
+  options?: Parameters<typeof renderToDocument>[1],
+): string {
+  const appHtml = typeof app === 'string' ? app : renderComponentToString(app);
+  return renderToDocument(appHtml, options);
 }
 
 /**

@@ -1,17 +1,20 @@
+import type { Control } from '@control.ts/control';
+
 import type { Route } from './index.js';
 import { matchRoute } from './index.js';
 
-export type RouterOptions = {
-  routes: Route[];
+export type RouterOptions<TComponent extends Control = Control> = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  routes: Route<any, TComponent>[];
   base?: string;
-  mount: (component: unknown) => void;
+  mount: (component: TComponent) => void;
 };
 
-export function createRouter(options: RouterOptions) {
+export function createRouter<TComponent extends Control = Control>(options: RouterOptions<TComponent>) {
   const { routes, base = '/', mount } = options;
 
   const navigationListeners = new Set<(isNavigating: boolean) => void>();
-  const routeChangeListeners = new Set<(component: unknown) => void>();
+  const routeChangeListeners = new Set<(component: TComponent) => void>();
   const errorListeners = new Set<(error: Error) => void>();
 
   const notifyListeners = (isNavigating: boolean) => {
@@ -91,7 +94,7 @@ export function createRouter(options: RouterOptions) {
       navigationListeners.add(cb);
       return () => navigationListeners.delete(cb);
     },
-    onNavigate: (cb: (component: unknown) => void) => {
+    onNavigate: (cb: (component: TComponent) => void) => {
       routeChangeListeners.add(cb);
       return () => routeChangeListeners.delete(cb);
     },

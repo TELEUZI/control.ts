@@ -1,17 +1,19 @@
+import type { Control } from '@control.ts/control';
 import type { Route } from '@control.ts/router';
 import { createRouter, matchRoute } from '@control.ts/router';
 
-export type HydrateClientOptions = {
-  routes: Route[];
+export type HydrateClientOptions<TComponent extends Control = Control> = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  routes: Route<any, TComponent>[];
   base?: string;
-  mount: (component: unknown) => void;
+  mount: (component: TComponent) => void;
 };
 
 export const clientRouter: {
   navigate: (path: string) => Promise<void>;
   prefetch: (path: string) => Promise<void>;
   subscribe: (callback: (isNavigating: boolean) => void) => () => void;
-  onNavigate: (callback: (component: unknown) => void) => () => void;
+  onNavigate: <TComponent extends Control = Control>(callback: (component: TComponent) => void) => () => void;
 } = {
   navigate: async () => {
     console.warn('Router not initialized');
@@ -23,7 +25,7 @@ export const clientRouter: {
   onNavigate: () => () => {},
 };
 
-export async function hydrateClient(options: HydrateClientOptions) {
+export async function hydrateClient<TComponent extends Control = Control>(options: HydrateClientOptions<TComponent>) {
   const { routes, base = '/', mount } = options;
 
   const router = createRouter({ routes, base, mount });
@@ -31,7 +33,7 @@ export async function hydrateClient(options: HydrateClientOptions) {
   clientRouter.navigate = router.navigate;
   clientRouter.prefetch = router.prefetch;
   clientRouter.subscribe = router.subscribe;
-  clientRouter.onNavigate = router.onNavigate;
+  clientRouter.onNavigate = router.onNavigate as unknown as typeof clientRouter.onNavigate;
 
   let urlPath = window.location.pathname;
   if (urlPath.startsWith(base)) {
@@ -49,8 +51,7 @@ export async function hydrateClient(options: HydrateClientOptions) {
   }
 
   // Get initial data from window object
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const initialData = (window as any).__INITIAL_DATA__;
+  const initialData = (window as Window & { __INITIAL_DATA__?: unknown }).__INITIAL_DATA__;
 
   if (matchedRoute) {
     const rootComponent = await matchedRoute.component(initialData);

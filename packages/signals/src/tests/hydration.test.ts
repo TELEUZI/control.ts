@@ -7,13 +7,7 @@ import { computed, signal } from '@preact/signals-core';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BaseComponent } from '../base-component';
-import {
-  clearHydrationData,
-  hydrateComponent,
-  isHydrationAvailable,
-  loadSignalState,
-  mountWithHydration,
-} from '../hydrate';
+import { clearHydrationData, hydrate, isHydrationAvailable, loadSignalState, mountWithHydration } from '../hydrate';
 import { clearSSRContext, createSSRContext, serializeHydrationData, serializeSignalState } from '../ssr';
 
 // Test components
@@ -100,7 +94,7 @@ describe('Signals Hydration Tests', () => {
       document.body.appendChild(scriptElement);
 
       const button = new ButtonComponent('Click Me');
-      hydrateComponent(button);
+      hydrate(document.body, button);
 
       expect(button.node.textContent).toBe('Click Me');
       expect(button.node.className).toContain('test-button');
